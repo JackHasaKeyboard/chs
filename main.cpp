@@ -1,7 +1,11 @@
 #include "disp.h"
+#include "shad.h"
 
 int main() {
 	Disp disp("chs", 800, 600);
+
+	Prog board("checker");
+	board.use();
 
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
