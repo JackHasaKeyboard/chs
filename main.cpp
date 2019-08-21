@@ -1,8 +1,19 @@
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "disp.h"
 #include "shad.h"
+#include "trans.h"
 
 int main() {
 	Disp disp("chs", 800, 600);
+	Cam cam(
+		glm::vec3(0, 0, 5),
+		70.0f,
+		800.0 / 600.0,
+		0.1f,
+		100.0f
+	);
 
 	Prog board("checker");
 	board.use();
@@ -25,6 +36,13 @@ int main() {
 
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
 	glEnableVertexAttribArray(0);
+
+	// MVP
+	Trans trans;
+	trans.getRot()->x = 90;
+
+	glm::mat4 mvp = trans.getMvp(cam);
+	glUniformMatrix4fv(glGetUniformLocation(board.id, "matr"), 1, GL_FALSE, glm::value_ptr(mvp));
 
 	while (true) {
 		disp.clear(0, 0, 0, 1);
