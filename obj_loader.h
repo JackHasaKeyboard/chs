@@ -43,8 +43,8 @@ class objModel {
 		std::vector<glm::vec3> normals;
 
 		bool
-			hasUVs,
-			hasNormals;
+			hasUv,
+			hasNorm;
 
 		objModel(const std::string& fileName);
 

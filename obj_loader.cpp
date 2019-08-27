@@ -10,42 +10,48 @@ static inline unsigned int parseObjIdxVal(const std::string& token, unsigned int
 static inline float parseObjFloatVal(const std::string& token, unsigned int start, unsigned int end);
 static inline std::vector<std::string> splitStr(const std::string &s, char delim);
 
-objModel::objModel(const std::string& fileName) {
-	hasUVs = false;
-	hasNormals = false;
-	std::ifstream file;
-	file.open(fileName.c_str());
+objModel::objModel(const std::string& fName) {
+	hasUv = false;
+	hasNorm = false;
+	std::ifstream f;
+	f.open(fName.c_str());
 
-	std::string line;
-	if(file.is_open()) {
-		while(file.good()) {
-			getline(file, line);
+	std::string l;
+	if(f.is_open()) {
+		while(f.good()) {
+			getline(f, l);
 
-			unsigned int lineLength = line.length();
+			unsigned int lineLength = l.length();
 
-			if(lineLength < 2) {
+			if (lineLength < 2) {
 				continue;
 			}
 
-			const char* lineCStr = line.c_str();
+			const char* lineCStr = l.c_str();
 
 			switch(lineCStr[0]) {
 				case 'v':
-					if(lineCStr[1] == 't')
-						this->uvs.push_back(ParseOBJVec2(line));
-					else if(lineCStr[1] == 'n')
-						this->normals.push_back(ParseOBJVec3(line));
-					else if(lineCStr[1] == ' ' || lineCStr[1] == '\t')
-						this->vertices.push_back(ParseOBJVec3(line));
+					if (lineCStr[1] == 't') {
+						this->uvs.push_back(ParseOBJVec2(l));
+					} else if (lineCStr[1] == 'n') {
+						this->normals.push_back(ParseOBJVec3(l));
+					} else if (lineCStr[1] == ' ' || lineCStr[1] == '\t') {
+						this->vertices.push_back(ParseOBJVec3(l));
+					}
+
 					break;
+
 				case 'f':
-					CreateOBJFace(line);
+					CreateOBJFace(l);
+
 					break;
-				default: break;
+
+				default:
+					break;
 			};
 		}
 	} else {
-		std::cerr << "Unable to load mesh: " << fileName << std::endl;
+		std::cerr << "Unable to load mesh: " << fName << std::endl;
 	}
 }
 
@@ -95,13 +101,13 @@ IdxedModel objModel::toIdxedModel() {
 		glm::vec2 currentTexCoord;
 		glm::vec3 currentNormal;
 
-		if (hasUVs) {
+		if (hasUv) {
 			currentTexCoord = uvs[currentIndex->uvIndex];
 		} else {
 			currentTexCoord = glm::vec2(0,0);
 		}
 
-		if (hasNormals) {
+		if (hasNorm) {
 			currentNormal = normals[currentIndex->normalIndex];
 		} else {
 			currentNormal = glm::vec3(0,0,0);
@@ -141,7 +147,7 @@ IdxedModel objModel::toIdxedModel() {
 		indexMap.insert(std::pair<unsigned int, unsigned int>(resultModelIndex, normalModelIndex));
 	}
 
-	if (!hasNormals) {
+	if (!hasNorm) {
 		normalModel.CalcNormals();
 
 		for(unsigned int i = 0; i < result.pos.size(); i++)
@@ -187,25 +193,25 @@ unsigned int objModel::FindLastVertexIndex(const std::vector<OBJIndex*>& indexLo
 
 				if (possibleIndex->vertexIndex != currentIndex->vertexIndex) {
 					break;
-				} else if((!hasUVs || possibleIndex->uvIndex == currentIndex->uvIndex) && (!hasNormals || possibleIndex->normalIndex == currentIndex->normalIndex)) {
+				} else if((!hasUv || possibleIndex->uvIndex == currentIndex->uvIndex) && (!hasNorm || possibleIndex->normalIndex == currentIndex->normalIndex)) {
 					glm::vec3 currentPosition = vertices[currentIndex->vertexIndex];
 					glm::vec2 currentTexCoord;
 					glm::vec3 currentNormal;
 
-					if (hasUVs) {
+					if (hasUv) {
 						currentTexCoord = uvs[currentIndex->uvIndex];
 					} else {
 						currentTexCoord = glm::vec2(0,0);
 					}
 
-					if (hasNormals) {
+					if (hasNorm) {
 						currentNormal = normals[currentIndex->normalIndex];
 					} else {
 						currentNormal = glm::vec3(0,0,0);
 					}
 
 					for (unsigned int j = 0; j < result.pos.size(); j++) {
-						if(currentPosition == result.pos[j] && ((!hasUVs || currentTexCoord == result.texCoords[j]) && (!hasNormals || currentNormal == result.normals[j]))) {
+						if(currentPosition == result.pos[j] && ((!hasUv || currentTexCoord == result.texCoords[j]) && (!hasNorm || currentNormal == result.normals[j]))) {
 							return j;
 						}
 					}
@@ -231,18 +237,18 @@ unsigned int objModel::FindLastVertexIndex(const std::vector<OBJIndex*>& indexLo
 void objModel::CreateOBJFace(const std::string& line) {
 	std::vector<std::string> tokens = splitStr(line, ' ');
 
-	this->OBJIndices.push_back(ParseOBJIndex(tokens[1], &this->hasUVs, &this->hasNormals));
-	this->OBJIndices.push_back(ParseOBJIndex(tokens[2], &this->hasUVs, &this->hasNormals));
-	this->OBJIndices.push_back(ParseOBJIndex(tokens[3], &this->hasUVs, &this->hasNormals));
+	this->OBJIndices.push_back(ParseOBJIndex(tokens[1], &this->hasUv, &this->hasNorm));
+	this->OBJIndices.push_back(ParseOBJIndex(tokens[2], &this->hasUv, &this->hasNorm));
+	this->OBJIndices.push_back(ParseOBJIndex(tokens[3], &this->hasUv, &this->hasNorm));
 
 	if((int)tokens.size() > 4) {
-		this->OBJIndices.push_back(ParseOBJIndex(tokens[1], &this->hasUVs, &this->hasNormals));
-		this->OBJIndices.push_back(ParseOBJIndex(tokens[3], &this->hasUVs, &this->hasNormals));
-		this->OBJIndices.push_back(ParseOBJIndex(tokens[4], &this->hasUVs, &this->hasNormals));
+		this->OBJIndices.push_back(ParseOBJIndex(tokens[1], &this->hasUv, &this->hasNorm));
+		this->OBJIndices.push_back(ParseOBJIndex(tokens[3], &this->hasUv, &this->hasNorm));
+		this->OBJIndices.push_back(ParseOBJIndex(tokens[4], &this->hasUv, &this->hasNorm));
 	}
 }
 
-OBJIndex objModel::ParseOBJIndex(const std::string& token, bool* hasUVs, bool* hasNormals) {
+OBJIndex objModel::ParseOBJIndex(const std::string& token, bool* hasUv, bool* hasNorm) {
 	unsigned int tokenLength = token.length();
 	const char* tokenString = token.c_str();
 
@@ -263,7 +269,7 @@ OBJIndex objModel::ParseOBJIndex(const std::string& token, bool* hasUVs, bool* h
 	vertIndexEnd = findNextChar(vertIndexStart, tokenString, tokenLength, '/');
 
 	result.uvIndex = parseObjIdxVal(token, vertIndexStart, vertIndexEnd);
-	*hasUVs = true;
+	*hasUv = true;
 
 	if (vertIndexEnd >= tokenLength) {
 		return result;
@@ -273,7 +279,7 @@ OBJIndex objModel::ParseOBJIndex(const std::string& token, bool* hasUVs, bool* h
 	vertIndexEnd = findNextChar(vertIndexStart, tokenString, tokenLength, '/');
 
 	result.normalIndex = parseObjIdxVal(token, vertIndexStart, vertIndexEnd);
-	*hasNormals = true;
+	*hasNorm = true;
 
 	return result;
 }
