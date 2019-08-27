@@ -4,13 +4,13 @@
 #include <algorithm>
 #include <map>
 
-static bool CompareOBJIndexPtr(const OBJIndex* a, const OBJIndex* b);
-static inline unsigned int FindNextChar(unsigned int start, const char* str, unsigned int length, char token);
-static inline unsigned int ParseOBJIndexValue(const std::string& token, unsigned int start, unsigned int end);
-static inline float ParseOBJFloatValue(const std::string& token, unsigned int start, unsigned int end);
-static inline std::vector<std::string> SplitString(const std::string &s, char delim);
+static bool compareObjIdxPtr(const OBJIndex* a, const OBJIndex* b);
+static inline unsigned int findNextChar(unsigned int start, const char* str, unsigned int length, char token);
+static inline unsigned int parseObjIdxVal(const std::string& token, unsigned int start, unsigned int end);
+static inline float parseObjFloatVal(const std::string& token, unsigned int start, unsigned int end);
+static inline std::vector<std::string> splitStr(const std::string &s, char delim);
 
-OBJModel::OBJModel(const std::string& fileName) {
+objModel::objModel(const std::string& fileName) {
 	hasUVs = false;
 	hasNormals = false;
 	std::ifstream file;
@@ -71,7 +71,7 @@ void IdxedModel::CalcNormals() {
 	}
 }
 
-IdxedModel OBJModel::toIdxedModel() {
+IdxedModel objModel::toIdxedModel() {
 	IdxedModel
 		result,
 		normalModel;
@@ -83,7 +83,7 @@ IdxedModel OBJModel::toIdxedModel() {
 	for(unsigned int i = 0; i < numIndices; i++)
 		indexLookup.push_back(&OBJIndices[i]);
 
-	std::sort(indexLookup.begin(), indexLookup.end(), CompareOBJIndexPtr);
+	std::sort(indexLookup.begin(), indexLookup.end(), compareObjIdxPtr);
 
 	std::map<OBJIndex, unsigned int> normalModelIndexMap;
 	std::map<unsigned int, unsigned int> indexMap;
@@ -151,7 +151,7 @@ IdxedModel OBJModel::toIdxedModel() {
 	return result;
 };
 
-unsigned int OBJModel::FindLastVertexIndex(const std::vector<OBJIndex*>& indexLookup, const OBJIndex* currentIndex, const IdxedModel& result) {
+unsigned int objModel::FindLastVertexIndex(const std::vector<OBJIndex*>& indexLookup, const OBJIndex* currentIndex, const IdxedModel& result) {
 	unsigned int
 		start = 0,
 		end = indexLookup.size(),
@@ -228,8 +228,8 @@ unsigned int OBJModel::FindLastVertexIndex(const std::vector<OBJIndex*>& indexLo
 	return -1;
 }
 
-void OBJModel::CreateOBJFace(const std::string& line) {
-	std::vector<std::string> tokens = SplitString(line, ' ');
+void objModel::CreateOBJFace(const std::string& line) {
+	std::vector<std::string> tokens = splitStr(line, ' ');
 
 	this->OBJIndices.push_back(ParseOBJIndex(tokens[1], &this->hasUVs, &this->hasNormals));
 	this->OBJIndices.push_back(ParseOBJIndex(tokens[2], &this->hasUVs, &this->hasNormals));
@@ -242,16 +242,16 @@ void OBJModel::CreateOBJFace(const std::string& line) {
 	}
 }
 
-OBJIndex OBJModel::ParseOBJIndex(const std::string& token, bool* hasUVs, bool* hasNormals) {
+OBJIndex objModel::ParseOBJIndex(const std::string& token, bool* hasUVs, bool* hasNormals) {
 	unsigned int tokenLength = token.length();
 	const char* tokenString = token.c_str();
 
 	unsigned int
 		vertIndexStart = 0,
-		vertIndexEnd = FindNextChar(vertIndexStart, tokenString, tokenLength, '/');
+		vertIndexEnd = findNextChar(vertIndexStart, tokenString, tokenLength, '/');
 
 	OBJIndex result;
-	result.vertexIndex = ParseOBJIndexValue(token, vertIndexStart, vertIndexEnd);
+	result.vertexIndex = parseObjIdxVal(token, vertIndexStart, vertIndexEnd);
 	result.uvIndex = 0;
 	result.normalIndex = 0;
 
@@ -260,9 +260,9 @@ OBJIndex OBJModel::ParseOBJIndex(const std::string& token, bool* hasUVs, bool* h
 	}
 
 	vertIndexStart = vertIndexEnd + 1;
-	vertIndexEnd = FindNextChar(vertIndexStart, tokenString, tokenLength, '/');
+	vertIndexEnd = findNextChar(vertIndexStart, tokenString, tokenLength, '/');
 
-	result.uvIndex = ParseOBJIndexValue(token, vertIndexStart, vertIndexEnd);
+	result.uvIndex = parseObjIdxVal(token, vertIndexStart, vertIndexEnd);
 	*hasUVs = true;
 
 	if (vertIndexEnd >= tokenLength) {
@@ -270,15 +270,15 @@ OBJIndex OBJModel::ParseOBJIndex(const std::string& token, bool* hasUVs, bool* h
 	}
 
 	vertIndexStart = vertIndexEnd + 1;
-	vertIndexEnd = FindNextChar(vertIndexStart, tokenString, tokenLength, '/');
+	vertIndexEnd = findNextChar(vertIndexStart, tokenString, tokenLength, '/');
 
-	result.normalIndex = ParseOBJIndexValue(token, vertIndexStart, vertIndexEnd);
+	result.normalIndex = parseObjIdxVal(token, vertIndexStart, vertIndexEnd);
 	*hasNormals = true;
 
 	return result;
 }
 
-glm::vec3 OBJModel::ParseOBJVec3(const std::string& line) {
+glm::vec3 objModel::ParseOBJVec3(const std::string& line) {
 	unsigned int tokenLength = line.length();
 	const char* tokenString = line.c_str();
 
@@ -292,24 +292,24 @@ glm::vec3 OBJModel::ParseOBJVec3(const std::string& line) {
 		vertIndexStart++;
 	}
 
-	unsigned int vertIndexEnd = FindNextChar(vertIndexStart, tokenString, tokenLength, ' ');
+	unsigned int vertIndexEnd = findNextChar(vertIndexStart, tokenString, tokenLength, ' ');
 
-	float x = ParseOBJFloatValue(line, vertIndexStart, vertIndexEnd);
-
-	vertIndexStart = vertIndexEnd + 1;
-	vertIndexEnd = FindNextChar(vertIndexStart, tokenString, tokenLength, ' ');
-
-	float y = ParseOBJFloatValue(line, vertIndexStart, vertIndexEnd);
+	float x = parseObjFloatVal(line, vertIndexStart, vertIndexEnd);
 
 	vertIndexStart = vertIndexEnd + 1;
-	vertIndexEnd = FindNextChar(vertIndexStart, tokenString, tokenLength, ' ');
+	vertIndexEnd = findNextChar(vertIndexStart, tokenString, tokenLength, ' ');
 
-	float z = ParseOBJFloatValue(line, vertIndexStart, vertIndexEnd);
+	float y = parseObjFloatVal(line, vertIndexStart, vertIndexEnd);
+
+	vertIndexStart = vertIndexEnd + 1;
+	vertIndexEnd = findNextChar(vertIndexStart, tokenString, tokenLength, ' ');
+
+	float z = parseObjFloatVal(line, vertIndexStart, vertIndexEnd);
 
 	return glm::vec3(x,y,z);
 }
 
-glm::vec2 OBJModel::ParseOBJVec2(const std::string& line) {
+glm::vec2 objModel::ParseOBJVec2(const std::string& line) {
 	unsigned int tokenLength = line.length();
 	const char* tokenString = line.c_str();
 
@@ -323,23 +323,23 @@ glm::vec2 OBJModel::ParseOBJVec2(const std::string& line) {
 		vertIndexStart++;
 	}
 
-	unsigned int vertIndexEnd = FindNextChar(vertIndexStart, tokenString, tokenLength, ' ');
+	unsigned int vertIndexEnd = findNextChar(vertIndexStart, tokenString, tokenLength, ' ');
 
-	float x = ParseOBJFloatValue(line, vertIndexStart, vertIndexEnd);
+	float x = parseObjFloatVal(line, vertIndexStart, vertIndexEnd);
 
 	vertIndexStart = vertIndexEnd + 1;
-	vertIndexEnd = FindNextChar(vertIndexStart, tokenString, tokenLength, ' ');
+	vertIndexEnd = findNextChar(vertIndexStart, tokenString, tokenLength, ' ');
 
-	float y = ParseOBJFloatValue(line, vertIndexStart, vertIndexEnd);
+	float y = parseObjFloatVal(line, vertIndexStart, vertIndexEnd);
 
 	return glm::vec2(x,y);
 }
 
-static bool CompareOBJIndexPtr(const OBJIndex* a, const OBJIndex* b) {
+static bool compareObjIdxPtr(const OBJIndex* a, const OBJIndex* b) {
 	return a->vertexIndex < b->vertexIndex;
 }
 
-static inline unsigned int FindNextChar(unsigned int start, const char* str, unsigned int length, char token) {
+static inline unsigned int findNextChar(unsigned int start, const char* str, unsigned int length, char token) {
 	unsigned int result = start;
 	while(result < length) {
 		result++;
@@ -352,15 +352,15 @@ static inline unsigned int FindNextChar(unsigned int start, const char* str, uns
 	return result;
 }
 
-static inline unsigned int ParseOBJIndexValue(const std::string& token, unsigned int start, unsigned int end) {
+static inline unsigned int parseObjIdxVal(const std::string& token, unsigned int start, unsigned int end) {
 	return atoi(token.substr(start, end - start).c_str()) - 1;
 }
 
-static inline float ParseOBJFloatValue(const std::string& token, unsigned int start, unsigned int end) {
+static inline float parseObjFloatVal(const std::string& token, unsigned int start, unsigned int end) {
 	return atof(token.substr(start, end - start).c_str());
 }
 
-static inline std::vector<std::string> SplitString(const std::string &s, char delim) {
+static inline std::vector<std::string> splitStr(const std::string &s, char delim) {
 	std::vector<std::string> elems;
 
 	const char* cstr = s.c_str();

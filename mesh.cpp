@@ -7,7 +7,7 @@
 #include "mesh.h"
 
 Mesh::Mesh(const std::string& fName) {
-	initMesh(OBJModel("./obj/" + fName + ".obj").toIdxedModel());
+	initMesh(objModel("./obj/" + fName + ".obj").toIdxedModel());
 }
 
 void Mesh::initMesh(const IdxedModel& model) {

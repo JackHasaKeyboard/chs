@@ -27,7 +27,7 @@ class IdxedModel {
 		void CalcNormals();
 };
 
-class OBJModel {
+class objModel {
 	private:
 		unsigned int FindLastVertexIndex(const std::vector<OBJIndex*>& indexLookup, const OBJIndex* currentIndex, const IdxedModel& result);
 		void CreateOBJFace(const std::string& line);
@@ -46,7 +46,7 @@ class OBJModel {
 			hasUVs,
 			hasNormals;
 
-		OBJModel(const std::string& fileName);
+		objModel(const std::string& fileName);
 
 		IdxedModel toIdxedModel();
 };
