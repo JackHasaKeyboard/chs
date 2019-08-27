@@ -71,8 +71,33 @@ int main() {
 	}
 
 	SDL_Event e;
+	bool down;
+	int
+		start[2],
+		curr[2],
+		delta;
 	while (true) {
 		while (SDL_PollEvent(&e)) {
+			if (e.type == SDL_MOUSEBUTTONDOWN) {
+				down = true;
+
+				SDL_GetMouseState(&start[0], &start[1]);
+			}
+
+			if (e.type == SDL_MOUSEMOTION) {
+				if (down) {
+					SDL_GetMouseState(&curr[0], &curr[1]);
+
+					delta = start[0] - curr[0];
+
+					cam.pitch(delta / 1000.0);
+				}
+			}
+
+			if (e.type == SDL_MOUSEBUTTONUP) {
+				down = false;
+			}
+
 			if (e.type == SDL_KEYDOWN) {
 				if (e.key.keysym.sym == SDLK_F5) {
 					cam.orientation = !cam.orientation;
