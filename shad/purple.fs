@@ -1,5 +1,7 @@
 #version 150
 
+uniform int t;
+
 out vec4 col;
 
 vec3 purple[2] = vec3[2](
@@ -8,5 +10,5 @@ vec3 purple[2] = vec3[2](
 );
 
 void main() {
-	col = vec4(purple[0], 1.0);
+	col = vec4(purple[t], 1.0);
 }

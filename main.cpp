@@ -62,7 +62,11 @@ int main() {
 				z = (t * -8) + i > 4,
 				x = i - (z * 4);
 
-			coll.push_back(Obj("pawn", glm::vec3(x, 0, z)));
+			coll.push_back(Obj(
+				"pawn",
+				glm::vec3(x, 0, z),
+				t
+			));
 		}
 	}
 

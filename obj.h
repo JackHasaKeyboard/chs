@@ -17,17 +17,27 @@ class Obj {
 		glm::vec3 loc;
 		glm::mat4 mvp;
 
-		Obj(std::string mesh, glm::vec3 loc) {
+		bool t;
+
+		Obj(std::string mesh, glm::vec3 loc, bool t) {
 			this->mesh = new Mesh(mesh);
 			this->prog = new Prog("purple");
 
 			this->loc = loc;
 			this->trans = new Trans;
 			trans->setPos(loc);
+
+			this->t = t;
 		}
 
 		void draw(const Cam& cam) {
 			prog->use();
+
+			// color
+			glUniform1i(
+				glGetUniformLocation(this->prog->id, "t"),
+				this->t
+			);
 
 			// MVP
 			this->mvp = trans->getMvp(cam);
