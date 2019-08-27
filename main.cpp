@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -48,7 +49,7 @@ int main() {
 	glUniformMatrix4fv(glGetUniformLocation(board.id, "matr"), 1, GL_FALSE, glm::value_ptr(mvp));
 	
 	// position
-	glm::vec2 mv = glm::vec2(8, 6);
+	glm::vec2 mv = glm::vec2(6, 6);
 	glUniform2fv(
 		glGetUniformLocation(board.id, "mv"),
 		1,
@@ -114,9 +115,42 @@ int main() {
 			}
 
 			if (e.type == SDL_KEYDOWN) {
-				if (e.key.keysym.sym == SDLK_F5) {
+				GLchar k = e.key.keysym.sym;
+
+				if (k == SDLK_F5) {
 					cam.orientation = !cam.orientation;
 				}
+
+				if (k == SDLK_a) {
+					if (mv[0] > 0) {
+						mv[0]--;
+					}
+				}
+
+				if (k == SDLK_d) {
+					if (mv[0] < 8) {
+						mv[0]++;
+					}
+				}
+
+				if (k == SDLK_s) {
+					if (mv[1] > 0) {
+						mv[1]--;
+					}
+				}
+
+				if (k == SDLK_w) {
+					if (mv[1] < 8) {
+						mv[1]++;
+					}
+				}
+
+				// position
+				glUniform2fv(
+					glGetUniformLocation(board.id, "mv"),
+					1,
+					glm::value_ptr(mv)
+				);
 			}
 
 			disp.clear(0, 0, 0, 1);
