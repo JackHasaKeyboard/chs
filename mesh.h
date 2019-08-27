@@ -51,7 +51,7 @@ class Mesh {
 
 	public:
 		Mesh(const std::string& fName);
-		Mesh(Vertex* vtc, unsigned int noVtc, unsigned int* indices, unsigned int noIdc);
+		Mesh(Vertex* vtc, unsigned int noVtc, unsigned int* idc, unsigned int noIdc);
 
 		void draw();
 

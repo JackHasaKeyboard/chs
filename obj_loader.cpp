@@ -55,32 +55,36 @@ ObjModel::ObjModel(const std::string& name) {
 void IdxedModel::calcNorm() {
 	for (
 		unsigned int i = 0;
-		i < indices.size();
+		i < idc.size();
 		i += 3
 	) {
 		int
-			i0 = indices[i],
-			i1 = indices[i + 1],
-			i2 = indices[i + 2];
+			i0 = idc[i],
+			i1 = idc[i + 1],
+			i2 = idc[i + 2];
 
 		glm::vec3 v1 = pos[i1] - pos[i0];
 		glm::vec3 v2 = pos[i2] - pos[i0];
 
-		glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
+		glm::vec3 val = glm::normalize(glm::cross(v1, v2));
 
-		norm[i0] += normal;
-		norm[i1] += normal;
-		norm[i2] += normal;
+		this->norm[i0] += val;
+		this->norm[i1] += val;
+		this->norm[i2] += val;
 	}
 
-	for (unsigned int i = 0; i < pos.size(); i++) {
+	for (
+		unsigned int i = 0;
+		i < pos.size();
+		i++
+	) {
 		norm[i] = glm::normalize(norm[i]);
 	}
 }
 
 IdxedModel ObjModel::toIdxedModel() {
 	IdxedModel
-		result,
+		res,
 		normalModel;
 
 	unsigned int numIndices = objIdc.size();
@@ -93,69 +97,74 @@ IdxedModel ObjModel::toIdxedModel() {
 	std::sort(indexLookup.begin(), indexLookup.end(), compareObjIdxPtr);
 
 	std::map<ObjIdx, unsigned int> normalModelIndexMap;
-	std::map<unsigned int, unsigned int> indexMap;
+	std::map<unsigned int, unsigned int> idxMap;
 
 	for (unsigned int i = 0; i < numIndices; i++) {
 		ObjIdx* currentIndex = &objIdc[i];
 
-		glm::vec3 currentPosition = vtc[currentIndex->vtxIdx];
-		glm::vec2 currentTexCoord;
-		glm::vec3 currentNormal;
+		glm::vec3 currPos = vtc[currentIndex->vtxIdx];
+		glm::vec2 currTexCoord;
+		glm::vec3 currNorm;
 
 		if (hasUv) {
-			currentTexCoord = uv[currentIndex->uvIdx];
+			currTexCoord = uv[currentIndex->uvIdx];
 		} else {
-			currentTexCoord = glm::vec2(0,0);
+			currTexCoord = glm::vec2(0,0);
 		}
 
 		if (hasNorm) {
-			currentNormal = norm[currentIndex->normIdx];
+			currNorm = norm[currentIndex->normIdx];
 		} else {
-			currentNormal = glm::vec3(0,0,0);
+			currNorm = glm::vec3(0,0,0);
 		}
 
 		unsigned int
-			normalModelIndex,
-			resultModelIndex;
+			normModelIdx,
+			resModelIdx;
 
 		std::map<ObjIdx, unsigned int>::iterator it = normalModelIndexMap.find(*currentIndex);
 		if (it == normalModelIndexMap.end()) {
-			normalModelIndex = normalModel.pos.size();
+			normModelIdx = normalModel.pos.size();
 
-			normalModelIndexMap.insert(std::pair<ObjIdx, unsigned int>(*currentIndex, normalModelIndex));
-			normalModel.pos.push_back(currentPosition);
-			normalModel.texCoords.push_back(currentTexCoord);
-			normalModel.norm.push_back(currentNormal);
+			normalModelIndexMap.insert(std::pair<ObjIdx, unsigned int>(*currentIndex, normModelIdx));
+			normalModel.pos.push_back(currPos);
+			normalModel.texCoords.push_back(currTexCoord);
+			normalModel.norm.push_back(currNorm);
 		} else {
-			normalModelIndex = it->second;
+			normModelIdx = it->second;
 		}
 
 		// create model which properly separates texture coordinates
-		unsigned int previousVertexLocation = findLastVtxIdx(indexLookup, currentIndex, result);
+		unsigned int previousVertexLocation = findLastVtxIdx(indexLookup, currentIndex, res);
 
 		if (previousVertexLocation == (unsigned int) -1) {
-			resultModelIndex = result.pos.size();
+			resModelIdx = res.pos.size();
 
-			result.pos.push_back(currentPosition);
-			result.texCoords.push_back(currentTexCoord);
-			result.norm.push_back(currentNormal);
+			res.pos.push_back(currPos);
+			res.texCoords.push_back(currTexCoord);
+			res.norm.push_back(currNorm);
 		} else {
-			resultModelIndex = previousVertexLocation;
+			resModelIdx = previousVertexLocation;
 		}
 
-		normalModel.indices.push_back(normalModelIndex);
-		result.indices.push_back(resultModelIndex);
-		indexMap.insert(std::pair<unsigned int, unsigned int>(resultModelIndex, normalModelIndex));
+		normalModel.idc.push_back(normModelIdx);
+		res.idc.push_back(resModelIdx);
+		idxMap.insert(std::pair<unsigned int, unsigned int>(resModelIdx, normModelIdx));
 	}
 
 	if (!hasNorm) {
 		normalModel.calcNorm();
 
-		for(unsigned int i = 0; i < result.pos.size(); i++)
-			result.norm[i] = normalModel.norm[indexMap[i]];
+		for (
+			unsigned int i = 0;
+			i < res.pos.size();
+			i++
+		) {
+			res.norm[i] = normalModel.norm[idxMap[i]];
+		}
 	}
 
-	return result;
+	return res;
 };
 
 unsigned int ObjModel::findLastVtxIdx(const std::vector<ObjIdx*>& indexLookup, const ObjIdx* currentIndex, const IdxedModel& result) {
@@ -195,24 +204,28 @@ unsigned int ObjModel::findLastVtxIdx(const std::vector<ObjIdx*>& indexLookup, c
 				if (possibleIndex->vtxIdx != currentIndex->vtxIdx) {
 					break;
 				} else if((!hasUv || possibleIndex->uvIdx == currentIndex->uvIdx) && (!hasNorm || possibleIndex->normIdx == currentIndex->normIdx)) {
-					glm::vec3 currentPosition = vtc[currentIndex->vtxIdx];
-					glm::vec2 currentTexCoord;
-					glm::vec3 currentNormal;
+					glm::vec3 currPos = vtc[currentIndex->vtxIdx];
+					glm::vec2 currTexCoord;
+					glm::vec3 currNorm;
 
 					if (hasUv) {
-						currentTexCoord = uv[currentIndex->uvIdx];
+						currTexCoord = uv[currentIndex->uvIdx];
 					} else {
-						currentTexCoord = glm::vec2(0,0);
+						currTexCoord = glm::vec2(0,0);
 					}
 
 					if (hasNorm) {
-						currentNormal = norm[currentIndex->normIdx];
+						currNorm = norm[currentIndex->normIdx];
 					} else {
-						currentNormal = glm::vec3(0,0,0);
+						currNorm = glm::vec3(0,0,0);
 					}
 
-					for (unsigned int j = 0; j < result.pos.size(); j++) {
-						if(currentPosition == result.pos[j] && ((!hasUv || currentTexCoord == result.texCoords[j]) && (!hasNorm || currentNormal == result.norm[j]))) {
+					for (
+						unsigned int j = 0;
+						j < result.pos.size();
+						j++
+					) {
+						if (currPos == result.pos[j] && ((!hasUv || currTexCoord == result.texCoords[j]) && (!hasNorm || currNorm == result.norm[j]))) {
 							return j;
 						}
 					}

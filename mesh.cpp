@@ -11,7 +11,7 @@ Mesh::Mesh(const std::string& fName) {
 }
 
 void Mesh::initMesh(const IdxedModel& model) {
-	noIdc = model.indices.size();
+	noIdc = model.idc.size();
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
@@ -32,11 +32,11 @@ void Mesh::initMesh(const IdxedModel& model) {
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[INDEX_VB]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(model.indices[0]) * model.indices.size(), &model.indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(model.idc[0]) * model.idc.size(), &model.idc[0], GL_STATIC_DRAW);
 	glBindVertexArray(0);
 }
 
-Mesh::Mesh(Vertex* vertices, unsigned int numVertices, unsigned int* indices, unsigned int numIndices) {
+Mesh::Mesh(Vertex* vertices, unsigned int numVertices, unsigned int* idc, unsigned int numIndices) {
 	IdxedModel model;
 
 	for (
@@ -54,7 +54,7 @@ Mesh::Mesh(Vertex* vertices, unsigned int numVertices, unsigned int* indices, un
 		i < numIndices;
 		i++
 	) {
-		model.indices.push_back(indices[i]);
+		model.idc.push_back(idc[i]);
 	}
 
 	initMesh(model);

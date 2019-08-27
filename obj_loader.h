@@ -22,7 +22,7 @@ class IdxedModel {
 		std::vector<glm::vec2> texCoords;
 		std::vector<glm::vec3> norm;
 
-		std::vector<unsigned int> indices;
+		std::vector<unsigned int> idc;
 
 		void calcNorm();
 };
