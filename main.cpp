@@ -55,6 +55,13 @@ int main() {
 		glm::value_ptr(mv)
 	);
 
+	// team
+	bool t = false;
+	glUniform1i(
+		glGetUniformLocation(board.id, "t"),
+		t
+	);
+
 	std::vector<Obj> coll;
 	for (
 		int t = 0;
