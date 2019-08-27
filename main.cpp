@@ -9,7 +9,7 @@
 int main() {
 	Disp disp("chs", 800, 600);
 	Cam cam(
-		glm::vec3(0, 0, 5),
+		glm::vec3(0, 20, 7.5),
 		70.0f,
 		800.0 / 600.0,
 		0.1f,
