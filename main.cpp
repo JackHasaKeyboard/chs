@@ -51,7 +51,7 @@ int main() {
 		disp.clear(0, 0, 0, 1);
 
 		/* glDrawArrays(GL_QUADS, 0, 4); */
-		pawn.draw();
+		pawn.draw(cam);
 
 		disp.update();
 	}

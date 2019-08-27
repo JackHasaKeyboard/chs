@@ -8,5 +8,5 @@ vec3 purple[2] = vec3[2](
 );
 
 void main() {
-	col = vec4(purple[1], 1.0);
+	col = vec4(purple[0], 1.0);
 }
