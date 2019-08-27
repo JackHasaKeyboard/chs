@@ -46,6 +46,14 @@ int main() {
 
 	glm::mat4 mvp = trans.getMvp(cam);
 	glUniformMatrix4fv(glGetUniformLocation(board.id, "matr"), 1, GL_FALSE, glm::value_ptr(mvp));
+	
+	// position
+	glm::vec2 mv = glm::vec2(8, 6);
+	glUniform2fv(
+		glGetUniformLocation(board.id, "mv"),
+		1,
+		glm::value_ptr(mv)
+	);
 
 	std::vector<Obj> coll;
 	for (
