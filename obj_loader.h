@@ -1,16 +1,17 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <vector>
 #include <string>
 
-struct OBJIndex {
-	unsigned int vertexIndex;
-	unsigned int uvIndex;
-	unsigned int normalIndex;
+#include <glm/glm.hpp>
 
-	bool operator < (const OBJIndex& r) const {
-		return vertexIndex < r.vertexIndex;
+struct objIdx {
+	unsigned int vtxIdx;
+	unsigned int uvIdx;
+	unsigned int normIdx;
+
+	bool operator < (const objIdx& r) const {
+		return vtxIdx < r.vtxIdx;
 	}
 };
 
@@ -24,20 +25,20 @@ class IdxedModel {
 			unsigned int
 		> indices;
 
-		void CalcNormals();
+		void calcNorm();
 };
 
 class objModel {
 	private:
-		unsigned int FindLastVertexIndex(const std::vector<OBJIndex*>& indexLookup, const OBJIndex* currentIndex, const IdxedModel& result);
+		unsigned int FindLastVertexIndex(const std::vector<objIdx*>& indexLookup, const objIdx* currentIndex, const IdxedModel& result);
 		void CreateOBJFace(const std::string& line);
 
-		glm::vec2 ParseOBJVec2(const std::string& line);
+		glm::vec2 parseObjVec2(const std::string& line);
 		glm::vec3 ParseOBJVec3(const std::string& line);
-		OBJIndex ParseOBJIndex(const std::string& token, bool* hasUVs, bool* hasNormals);
+		objIdx ParseobjIdx(const std::string& token, bool* hasUVs, bool* hasNormals);
 
 	public:
-		std::vector<OBJIndex> OBJIndices;
+		std::vector<objIdx> OBJIndices;
 		std::vector<glm::vec3> vertices;
 		std::vector<glm::vec2> uvs;
 		std::vector<glm::vec3> normals;
