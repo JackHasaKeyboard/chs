@@ -101,7 +101,7 @@ IdxedModel ObjModel::toIdxedModel() {
 
 	std::sort(idxLookup.begin(), idxLookup.end(), compareObjIdxPtr);
 
-	std::map<ObjIdx, unsigned int> normModIndexMap;
+	std::map<ObjIdx, unsigned int> normModIdxMap;
 	std::map<unsigned int, unsigned int> idxMap;
 
 	for (
@@ -131,11 +131,11 @@ IdxedModel ObjModel::toIdxedModel() {
 			normModelIdx,
 			resModelIdx;
 
-		std::map<ObjIdx, unsigned int>::iterator it = normModIndexMap.find(*currIdx);
-		if (it == normModIndexMap.end()) {
+		std::map<ObjIdx, unsigned int>::iterator it = normModIdxMap.find(*currIdx);
+		if (it == normModIdxMap.end()) {
 			normModelIdx = normMod.pos.size();
 
-			normModIndexMap.insert(std::pair<ObjIdx, unsigned int>(*currIdx, normModelIdx));
+			normModIdxMap.insert(std::pair<ObjIdx, unsigned int>(*currIdx, normModelIdx));
 			normMod.pos.push_back(currPos);
 			normMod.texCoords.push_back(currTexCoord);
 			normMod.norm.push_back(currNorm);
@@ -144,16 +144,16 @@ IdxedModel ObjModel::toIdxedModel() {
 		}
 
 		// create model which properly separates texture coordinates
-		unsigned int previousVertexLocation = findLastVtxIdx(idxLookup, currIdx, res);
+		unsigned int prevVtxLoc = findLastVtxIdx(idxLookup, currIdx, res);
 
-		if (previousVertexLocation == (unsigned int) -1) {
+		if (prevVtxLoc == (unsigned int) -1) {
 			resModelIdx = res.pos.size();
 
 			res.pos.push_back(currPos);
 			res.texCoords.push_back(currTexCoord);
 			res.norm.push_back(currNorm);
 		} else {
-			resModelIdx = previousVertexLocation;
+			resModelIdx = prevVtxLoc;
 		}
 
 		normMod.idc.push_back(normModelIdx);
@@ -181,13 +181,13 @@ unsigned int ObjModel::findLastVtxIdx(const std::vector<ObjIdx*>& idxLookup, con
 		start = 0,
 		end = idxLookup.size(),
 		curr = (end - start) / 2 + start,
-		previous = start;
+		prev = start;
 
-	while (curr != previous) {
+	while (curr != prev) {
 		ObjIdx* testIdx = idxLookup[curr];
 
 		if (testIdx->vtxIdx == currIdx->vtxIdx) {
-			unsigned int countStart = curr;
+			unsigned int cntStart = curr;
 
 			for (
 				unsigned int i = 0;
@@ -204,12 +204,12 @@ unsigned int ObjModel::findLastVtxIdx(const std::vector<ObjIdx*>& idxLookup, con
 					break;
 				}
 
-				countStart--;
+				cntStart--;
 			}
 
 			for (
-				unsigned int i = countStart;
-				i < idxLookup.size() - countStart;
+				unsigned int i = cntStart;
+				i < idxLookup.size() - cntStart;
 				i++
 			) {
 				ObjIdx* possIdx = idxLookup[curr + i];
@@ -258,7 +258,7 @@ unsigned int ObjModel::findLastVtxIdx(const std::vector<ObjIdx*>& idxLookup, con
 			}
 		}
 
-		previous = curr;
+		prev = curr;
 		curr = (end - start) / 2 + start;
 	}
 
@@ -281,11 +281,11 @@ void ObjModel::createObjFace(const std::string& line) {
 
 ObjIdx ObjModel::parseObjIdx(const std::string& token, bool* hasUv, bool* hasNorm) {
 	unsigned int tokLn = token.length();
-	const char* tokStr = token.c_str();
+	const char* str = token.c_str();
 
 	unsigned int
 		vertIdxStart = 0,
-		vertIdxEnd = findNextChar(vertIdxStart, tokStr, tokLn, '/');
+		vertIdxEnd = findNextChar(vertIdxStart, str, tokLn, '/');
 
 	ObjIdx result;
 	result.vtxIdx = parseObjIdxVal(token, vertIdxStart, vertIdxEnd);
@@ -297,7 +297,7 @@ ObjIdx ObjModel::parseObjIdx(const std::string& token, bool* hasUv, bool* hasNor
 	}
 
 	vertIdxStart = vertIdxEnd + 1;
-	vertIdxEnd = findNextChar(vertIdxStart, tokStr, tokLn, '/');
+	vertIdxEnd = findNextChar(vertIdxStart, str, tokLn, '/');
 
 	result.uvIdx = parseObjIdxVal(token, vertIdxStart, vertIdxEnd);
 	*hasUv = true;
@@ -307,7 +307,7 @@ ObjIdx ObjModel::parseObjIdx(const std::string& token, bool* hasUv, bool* hasNor
 	}
 
 	vertIdxStart = vertIdxEnd + 1;
-	vertIdxEnd = findNextChar(vertIdxStart, tokStr, tokLn, '/');
+	vertIdxEnd = findNextChar(vertIdxStart, str, tokLn, '/');
 
 	result.normIdx = parseObjIdxVal(token, vertIdxStart, vertIdxEnd);
 	*hasNorm = true;
@@ -315,59 +315,59 @@ ObjIdx ObjModel::parseObjIdx(const std::string& token, bool* hasUv, bool* hasNor
 	return result;
 }
 
-glm::vec3 ObjModel::parseObjVec3(const std::string& line) {
-	unsigned int tokLn = line.length();
-	const char* tokStr = line.c_str();
+glm::vec3 ObjModel::parseObjVec3(const std::string& l) {
+	unsigned int tokLn = l.length();
+	const char* str = l.c_str();
 
 	unsigned int vertIdxStart = 2;
 
 	while(vertIdxStart < tokLn) {
-		if(tokStr[vertIdxStart] != ' ') {
+		if (str[vertIdxStart] != ' ') {
 			break;
 		}
 
 		vertIdxStart++;
 	}
 
-	unsigned int vertIdxEnd = findNextChar(vertIdxStart, tokStr, tokLn, ' ');
+	unsigned int vertIdxEnd = findNextChar(vertIdxStart, str, tokLn, ' ');
 
-	float x = parseObjFloatVal(line, vertIdxStart, vertIdxEnd);
-
-	vertIdxStart = vertIdxEnd + 1;
-	vertIdxEnd = findNextChar(vertIdxStart, tokStr, tokLn, ' ');
-
-	float y = parseObjFloatVal(line, vertIdxStart, vertIdxEnd);
+	float x = parseObjFloatVal(l, vertIdxStart, vertIdxEnd);
 
 	vertIdxStart = vertIdxEnd + 1;
-	vertIdxEnd = findNextChar(vertIdxStart, tokStr, tokLn, ' ');
+	vertIdxEnd = findNextChar(vertIdxStart, str, tokLn, ' ');
 
-	float z = parseObjFloatVal(line, vertIdxStart, vertIdxEnd);
+	float y = parseObjFloatVal(l, vertIdxStart, vertIdxEnd);
 
-	return glm::vec3(x,y,z);
+	vertIdxStart = vertIdxEnd + 1;
+	vertIdxEnd = findNextChar(vertIdxStart, str, tokLn, ' ');
+
+	float z = parseObjFloatVal(l, vertIdxStart, vertIdxEnd);
+
+	return glm::vec3(x, y, z);
 }
 
-glm::vec2 ObjModel::parseObjVec2(const std::string& line) {
-	unsigned int tokLn = line.length();
-	const char* tokStr = line.c_str();
+glm::vec2 ObjModel::parseObjVec2(const std::string& l) {
+	unsigned int tokLn = l.length();
+	const char* str = l.c_str();
 
 	unsigned int vertIdxStart = 3;
 
 	while (vertIdxStart < tokLn) {
-		if (tokStr[vertIdxStart] != ' ') {
+		if (str[vertIdxStart] != ' ') {
 			break;
 		}
 
 		vertIdxStart++;
 	}
 
-	unsigned int vertIdxEnd = findNextChar(vertIdxStart, tokStr, tokLn, ' ');
+	unsigned int vertIdxEnd = findNextChar(vertIdxStart, str, tokLn, ' ');
 
-	float x = parseObjFloatVal(line, vertIdxStart, vertIdxEnd);
+	float x = parseObjFloatVal(l, vertIdxStart, vertIdxEnd);
 
 	vertIdxStart = vertIdxEnd + 1;
-	vertIdxEnd = findNextChar(vertIdxStart, tokStr, tokLn, ' ');
+	vertIdxEnd = findNextChar(vertIdxStart, str, tokLn, ' ');
 
-	float y = parseObjFloatVal(line, vertIdxStart, vertIdxEnd);
+	float y = parseObjFloatVal(l, vertIdxStart, vertIdxEnd);
 
 	return glm::vec2(x,y);
 }
@@ -376,25 +376,25 @@ static bool compareObjIdxPtr(const ObjIdx* a, const ObjIdx* b) {
 	return a->vtxIdx < b->vtxIdx;
 }
 
-static inline unsigned int findNextChar(unsigned int start, const char* str, unsigned int length, char token) {
-	unsigned int result = start;
-	while(result < length) {
-		result++;
+static inline unsigned int findNextChar(unsigned int start, const char* str, unsigned int length, char tok) {
+	unsigned int res = start;
+	while(res < length) {
+		res++;
 
-		if(str[result] == token) {
+		if (str[res] == tok) {
 			break;
 		}
 	}
 
-	return result;
+	return res;
 }
 
-static inline unsigned int parseObjIdxVal(const std::string& token, unsigned int start, unsigned int end) {
-	return atoi(token.substr(start, end - start).c_str()) - 1;
+static inline unsigned int parseObjIdxVal(const std::string& tok, unsigned int start, unsigned int end) {
+	return atoi(tok.substr(start, end - start).c_str()) - 1;
 }
 
-static inline float parseObjFloatVal(const std::string& token, unsigned int start, unsigned int end) {
-	return atof(token.substr(start, end - start).c_str());
+static inline float parseObjFloatVal(const std::string& tok, unsigned int start, unsigned int end) {
+	return atof(tok.substr(start, end - start).c_str());
 }
 
 static inline std::vector<std::string> splitStr(const std::string &s, char delim) {
