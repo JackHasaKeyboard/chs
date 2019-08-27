@@ -65,24 +65,30 @@ int main() {
 
 	std::vector<Obj> coll;
 	for (
-		int t = 0;
+		unsigned int t = 0;
 		t < 2;
 		t++
 	) {
-		for (
-			unsigned int i = 0;
-			i < 8;
-			i++
+			for (
+			unsigned int x = 0;
+			x < 8;
+			x++
 		) {
-			int
-				z = (t * -8) + i > 4,
-				x = i - (z * 4);
-
-			coll.push_back(Obj(
-				"pawn",
-				glm::vec3(x, 0, z),
-				t
-			));
+			for (
+				unsigned int z = 0;
+				z < 2;
+				z++
+			) {
+				coll.push_back(Obj(
+					"pawn",
+					glm::vec3(
+						(x * 2),
+						0,
+						(z * 2) + ((t * 8) * 2)
+					),
+					t
+				));
+			}
 		}
 	}
 
