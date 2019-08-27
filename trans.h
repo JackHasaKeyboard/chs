@@ -39,7 +39,7 @@ struct Trans {
 			return posMat * rotMat * scaleMat;
 		}
 
-		inline glm::mat4 getMvp(const Cam& cam) const {
+		inline glm::mat4 getMvp(Cam cam) const {
 			glm::mat4 vp = cam.getViewProj();
 			glm::mat4 m = getModel();
 

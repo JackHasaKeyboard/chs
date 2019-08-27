@@ -13,6 +13,8 @@ struct Cam {
 			fwd,
 			up;
 
+		bool orientation;
+
 		Cam(
 			const glm::vec3& pos,
 			float fov,
@@ -24,14 +26,28 @@ struct Cam {
 			this->fwd = glm::vec3(0.0f, 0.0f, 1.0f);
 			this->up = glm::vec3(0.0f, 1.0f, 0.0f);
 			this->proj = glm::perspective(fov, aspect, zNear, zFar);
+
+			this->orientation = false;
 		}
 
-		inline glm::mat4 getViewProj() const {
-			return proj * glm::lookAt(
-				pos,
-				fwd,
-				up
-			);
+		inline glm::mat4 getViewProj() {
+			if (this->orientation) {
+				this->pos = glm::vec3(0, 40, 0);
+
+				return proj * glm::lookAt(
+					pos,
+					fwd,
+					up
+				);
+			} else {
+				this->pos = glm::vec3(-15, 40, -15);
+
+				return proj * glm::lookAt(
+					pos,
+					fwd,
+					up
+				);
+			}
 		}
 
 		void pitch(float angle) {

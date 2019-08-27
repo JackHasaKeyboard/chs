@@ -73,6 +73,12 @@ int main() {
 	SDL_Event e;
 	while (true) {
 		while (SDL_PollEvent(&e)) {
+			if (e.type == SDL_KEYDOWN) {
+				if (e.key.keysym.sym == SDLK_F5) {
+					cam.orientation = !cam.orientation;
+				}
+			}
+
 			disp.clear(0, 0, 0, 1);
 
 			/* glDrawArrays(GL_QUADS, 0, 4); */
