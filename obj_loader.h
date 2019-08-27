@@ -19,7 +19,7 @@ class IdxedModel {
 	public:
 		std::vector<glm::vec3> pos;
 		std::vector<glm::vec2> texCoords;
-		std::vector<glm::vec3> normals;
+		std::vector<glm::vec3> norm;
 
 		std::vector<
 			unsigned int
@@ -35,19 +35,19 @@ class objModel {
 
 		glm::vec2 parseObjVec2(const std::string& line);
 		glm::vec3 ParseOBJVec3(const std::string& line);
-		objIdx ParseobjIdx(const std::string& token, bool* hasUVs, bool* hasNormals);
+		objIdx parseObjIdx(const std::string& token, bool* hasUVs, bool* hasNormals);
 
 	public:
-		std::vector<objIdx> OBJIndices;
-		std::vector<glm::vec3> vertices;
-		std::vector<glm::vec2> uvs;
-		std::vector<glm::vec3> normals;
+		std::vector<objIdx> objIdc;
+		std::vector<glm::vec3> vtc;
+		std::vector<glm::vec2> uv;
+		std::vector<glm::vec3> norm;
 
 		bool
 			hasUv,
 			hasNorm;
 
-		objModel(const std::string& fileName);
+		objModel(const std::string& fName);
 
 		IdxedModel toIdxedModel();
 };

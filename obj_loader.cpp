@@ -13,30 +13,28 @@ static inline std::vector<std::string> splitStr(const std::string &s, char delim
 objModel::objModel(const std::string& fName) {
 	hasUv = false;
 	hasNorm = false;
-	std::ifstream f;
-	f.open(fName.c_str());
 
+	std::ifstream f;
 	std::string l;
-	if(f.is_open()) {
-		while(f.good()) {
+	f.open(fName.c_str());
+	if (f.is_open()) {
+		while (f.good()) {
 			getline(f, l);
 
-			unsigned int lineLn = l.length();
-
-			if (lineLn < 2) {
+			if (l.length() < 2) {
 				continue;
 			}
 
-			const char* lineCStr = l.c_str();
+			const char* str = l.c_str();
 
-			switch (lineCStr[0]) {
+			switch (str[0]) {
 				case 'v':
-					if (lineCStr[1] == 't') {
-						this->uvs.push_back(parseObjVec2(l));
-					} else if (lineCStr[1] == 'n') {
-						this->normals.push_back(ParseOBJVec3(l));
-					} else if (lineCStr[1] == ' ' || lineCStr[1] == '\t') {
-						this->vertices.push_back(ParseOBJVec3(l));
+					if (str[1] == 't') {
+						this->uv.push_back(parseObjVec2(l));
+					} else if (str[1] == 'n') {
+						this->norm.push_back(ParseOBJVec3(l));
+					} else if (str[1] == ' ' || str[1] == '\t') {
+						this->vtc.push_back(ParseOBJVec3(l));
 					}
 
 					break;
@@ -67,13 +65,13 @@ void IdxedModel::calcNorm() {
 
 		glm::vec3 normal = glm::normalize(glm::cross(v1, v2));
 
-		normals[i0] += normal;
-		normals[i1] += normal;
-		normals[i2] += normal;
+		norm[i0] += normal;
+		norm[i1] += normal;
+		norm[i2] += normal;
 	}
 
 	for (unsigned int i = 0; i < pos.size(); i++) {
-		normals[i] = glm::normalize(normals[i]);
+		norm[i] = glm::normalize(norm[i]);
 	}
 }
 
@@ -82,12 +80,12 @@ IdxedModel objModel::toIdxedModel() {
 		result,
 		normalModel;
 
-	unsigned int numIndices = OBJIndices.size();
+	unsigned int numIndices = objIdc.size();
 
 	std::vector<objIdx*> indexLookup;
 
 	for(unsigned int i = 0; i < numIndices; i++)
-		indexLookup.push_back(&OBJIndices[i]);
+		indexLookup.push_back(&objIdc[i]);
 
 	std::sort(indexLookup.begin(), indexLookup.end(), compareObjIdxPtr);
 
@@ -95,20 +93,20 @@ IdxedModel objModel::toIdxedModel() {
 	std::map<unsigned int, unsigned int> indexMap;
 
 	for (unsigned int i = 0; i < numIndices; i++) {
-		objIdx* currentIndex = &OBJIndices[i];
+		objIdx* currentIndex = &objIdc[i];
 
-		glm::vec3 currentPosition = vertices[currentIndex->vtxIdx];
+		glm::vec3 currentPosition = vtc[currentIndex->vtxIdx];
 		glm::vec2 currentTexCoord;
 		glm::vec3 currentNormal;
 
 		if (hasUv) {
-			currentTexCoord = uvs[currentIndex->uvIdx];
+			currentTexCoord = uv[currentIndex->uvIdx];
 		} else {
 			currentTexCoord = glm::vec2(0,0);
 		}
 
 		if (hasNorm) {
-			currentNormal = normals[currentIndex->normIdx];
+			currentNormal = norm[currentIndex->normIdx];
 		} else {
 			currentNormal = glm::vec3(0,0,0);
 		}
@@ -124,7 +122,7 @@ IdxedModel objModel::toIdxedModel() {
 			normalModelIndexMap.insert(std::pair<objIdx, unsigned int>(*currentIndex, normalModelIndex));
 			normalModel.pos.push_back(currentPosition);
 			normalModel.texCoords.push_back(currentTexCoord);
-			normalModel.normals.push_back(currentNormal);
+			normalModel.norm.push_back(currentNormal);
 		} else {
 			normalModelIndex = it->second;
 		}
@@ -137,7 +135,7 @@ IdxedModel objModel::toIdxedModel() {
 
 			result.pos.push_back(currentPosition);
 			result.texCoords.push_back(currentTexCoord);
-			result.normals.push_back(currentNormal);
+			result.norm.push_back(currentNormal);
 		} else {
 			resultModelIndex = previousVertexLocation;
 		}
@@ -151,7 +149,7 @@ IdxedModel objModel::toIdxedModel() {
 		normalModel.calcNorm();
 
 		for(unsigned int i = 0; i < result.pos.size(); i++)
-			result.normals[i] = normalModel.normals[indexMap[i]];
+			result.norm[i] = normalModel.norm[indexMap[i]];
 	}
 
 	return result;
@@ -194,24 +192,24 @@ unsigned int objModel::FindLastVertexIndex(const std::vector<objIdx*>& indexLook
 				if (possibleIndex->vtxIdx != currentIndex->vtxIdx) {
 					break;
 				} else if((!hasUv || possibleIndex->uvIdx == currentIndex->uvIdx) && (!hasNorm || possibleIndex->normIdx == currentIndex->normIdx)) {
-					glm::vec3 currentPosition = vertices[currentIndex->vtxIdx];
+					glm::vec3 currentPosition = vtc[currentIndex->vtxIdx];
 					glm::vec2 currentTexCoord;
 					glm::vec3 currentNormal;
 
 					if (hasUv) {
-						currentTexCoord = uvs[currentIndex->uvIdx];
+						currentTexCoord = uv[currentIndex->uvIdx];
 					} else {
 						currentTexCoord = glm::vec2(0,0);
 					}
 
 					if (hasNorm) {
-						currentNormal = normals[currentIndex->normIdx];
+						currentNormal = norm[currentIndex->normIdx];
 					} else {
 						currentNormal = glm::vec3(0,0,0);
 					}
 
 					for (unsigned int j = 0; j < result.pos.size(); j++) {
-						if(currentPosition == result.pos[j] && ((!hasUv || currentTexCoord == result.texCoords[j]) && (!hasNorm || currentNormal == result.normals[j]))) {
+						if(currentPosition == result.pos[j] && ((!hasUv || currentTexCoord == result.texCoords[j]) && (!hasNorm || currentNormal == result.norm[j]))) {
 							return j;
 						}
 					}
@@ -237,18 +235,18 @@ unsigned int objModel::FindLastVertexIndex(const std::vector<objIdx*>& indexLook
 void objModel::CreateOBJFace(const std::string& line) {
 	std::vector<std::string> tokens = splitStr(line, ' ');
 
-	this->OBJIndices.push_back(ParseobjIdx(tokens[1], &this->hasUv, &this->hasNorm));
-	this->OBJIndices.push_back(ParseobjIdx(tokens[2], &this->hasUv, &this->hasNorm));
-	this->OBJIndices.push_back(ParseobjIdx(tokens[3], &this->hasUv, &this->hasNorm));
+	this->objIdc.push_back(parseObjIdx(tokens[1], &this->hasUv, &this->hasNorm));
+	this->objIdc.push_back(parseObjIdx(tokens[2], &this->hasUv, &this->hasNorm));
+	this->objIdc.push_back(parseObjIdx(tokens[3], &this->hasUv, &this->hasNorm));
 
 	if((int)tokens.size() > 4) {
-		this->OBJIndices.push_back(ParseobjIdx(tokens[1], &this->hasUv, &this->hasNorm));
-		this->OBJIndices.push_back(ParseobjIdx(tokens[3], &this->hasUv, &this->hasNorm));
-		this->OBJIndices.push_back(ParseobjIdx(tokens[4], &this->hasUv, &this->hasNorm));
+		this->objIdc.push_back(parseObjIdx(tokens[1], &this->hasUv, &this->hasNorm));
+		this->objIdc.push_back(parseObjIdx(tokens[3], &this->hasUv, &this->hasNorm));
+		this->objIdc.push_back(parseObjIdx(tokens[4], &this->hasUv, &this->hasNorm));
 	}
 }
 
-objIdx objModel::ParseobjIdx(const std::string& token, bool* hasUv, bool* hasNorm) {
+objIdx objModel::parseObjIdx(const std::string& token, bool* hasUv, bool* hasNorm) {
 	unsigned int tokenLength = token.length();
 	const char* tokenString = token.c_str();
 
