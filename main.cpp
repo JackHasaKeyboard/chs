@@ -26,10 +26,10 @@ int main() {
 	glBindVertexArray(vao);
 
 	const GLfloat vtc[] = {
-		-1.0, -1.0,
-		1.0, -1.0,
-		1.0, 1.0,
-		-1.0, 1.0
+		-8.0, -8.0,
+		8.0, -8.0,
+		8.0, 8.0,
+		-8.0, 8.0
 	};
 
 	GLuint vbo;
