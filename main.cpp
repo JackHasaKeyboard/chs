@@ -70,15 +70,18 @@ int main() {
 		}
 	}
 
+	SDL_Event e;
 	while (true) {
-		disp.clear(0, 0, 0, 1);
+		while (SDL_PollEvent(&e)) {
+			disp.clear(0, 0, 0, 1);
 
-		/* glDrawArrays(GL_QUADS, 0, 4); */
-		for (Obj& piece : coll) {
-			piece.draw(cam);
+			/* glDrawArrays(GL_QUADS, 0, 4); */
+			for (Obj& piece : coll) {
+				piece.draw(cam);
+			}
+
+			disp.update();
 		}
-
-		disp.update();
 	}
 
 	return 0;
