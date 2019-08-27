@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include <glm/glm.hpp>
+
 #include "shad.h"
 #include "mesh.h"
 #include "trans.h"
@@ -12,12 +14,16 @@ class Obj {
 		Prog* prog;
 		Trans* trans;
 
+		glm::vec3 loc;
 		glm::mat4 mvp;
 
-		Obj(std::string mesh) {
+		Obj(std::string mesh, glm::vec3 loc) {
 			this->mesh = new Mesh(mesh);
 			this->prog = new Prog("purple");
+
+			this->loc = loc;
 			this->trans = new Trans;
+			trans->setPos(loc);
 		}
 
 		void draw(const Cam& cam) {

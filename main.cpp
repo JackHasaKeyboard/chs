@@ -1,3 +1,5 @@
+#include <vector>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -45,13 +47,32 @@ int main() {
 	/* glm::mat4 mvp = trans.getMvp(cam); */
 	/* glUniformMatrix4fv(glGetUniformLocation(board.id, "matr"), 1, GL_FALSE, glm::value_ptr(mvp)); */
 
-	Obj pawn("pawn");
+	std::vector<Obj> coll;
+	for (
+		int t = 0;
+		t < 2;
+		t++
+	) {
+		for (
+			unsigned int i = 0;
+			i < 8;
+			i++
+		) {
+			int
+				z = (t * -8) + i > 4,
+				x = i - (z * 4);
+
+			coll.push_back(Obj("pawn", glm::vec3(x, 0, z)));
+		}
+	}
 
 	while (true) {
 		disp.clear(0, 0, 0, 1);
 
 		/* glDrawArrays(GL_QUADS, 0, 4); */
-		pawn.draw(cam);
+		for (Obj& piece : coll) {
+			piece.draw(cam);
+		}
 
 		disp.update();
 	}
