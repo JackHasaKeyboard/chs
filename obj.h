@@ -48,6 +48,15 @@ class Obj {
 				glm::value_ptr(this->mvp)
 			);
 
+			// normal
+			glm::mat4 norm = this->trans->getModel();
+			glUniformMatrix4fv(
+				glGetUniformLocation(this->prog->id, "norm"),
+				1,
+				GL_FALSE,
+				glm::value_ptr(norm)
+			);
+
 			mesh->draw();
 		}
 };

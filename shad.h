@@ -63,7 +63,7 @@ class Prog {
 			glAttachShader(this->id, vtx.id);
 
 			// position
-			GLint pos = glGetAttribLocation(prog, "pos");
+			GLint pos = glGetAttribLocation(prog, "a_pos");
 			glVertexAttribPointer(pos, 2, GL_FLOAT, GL_FALSE, 0, 0);
 			glEnableVertexAttribArray(pos);
 		}
