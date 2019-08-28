@@ -17,7 +17,9 @@ class Obj {
 		glm::vec3 loc;
 		glm::mat4 mvp;
 
-		bool t;
+		bool
+			t,
+			active;
 
 		Obj(std::string mesh, glm::vec3 loc, bool t) {
 			this->mesh = new Mesh(mesh);
@@ -28,6 +30,7 @@ class Obj {
 			trans->setPos(loc);
 
 			this->t = t;
+			this->active = false;
 		}
 
 		void draw(const Cam& cam) {
@@ -37,6 +40,12 @@ class Obj {
 			glUniform1i(
 				glGetUniformLocation(this->prog->id, "t"),
 				this->t
+			);
+
+			// active
+			glUniform1i(
+				glGetUniformLocation(this->prog->id, "active"),
+				this->active
 			);
 
 			// MVP

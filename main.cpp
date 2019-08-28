@@ -96,6 +96,9 @@ int main() {
 		}
 	}
 
+	int p = 0;
+	coll[p].active = true;
+
 	SDL_Event e;
 	bool down;
 	int
@@ -152,6 +155,19 @@ int main() {
 				if (k == SDLK_w) {
 					if (mv[1] < 8) {
 						mv[1]++;
+					}
+				}
+
+				if (k == SDLK_TAB) {
+					if (p < 15) {
+						p++;
+
+						for (auto& piece : coll) {
+							piece.active = false;
+						}
+						coll[p].active = true;
+					} else {
+						p = 0;
 					}
 				}
 
