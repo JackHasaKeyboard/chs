@@ -127,9 +127,7 @@ int main() {
 			if (e.type == SDL_KEYDOWN) {
 				GLchar k = e.key.keysym.sym;
 
-				cam.orientation = !cam.orientation;
-
-				if (k == SDLK_F5) {
+				if (k == 62 /* F5 */) {
 					cam.orientation = !cam.orientation;
 				}
 
