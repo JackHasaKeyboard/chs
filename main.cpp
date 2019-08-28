@@ -88,7 +88,7 @@ int main() {
 					glm::vec3(
 						(x * 2),
 						0,
-						/*(-4 * 2)*/ + ((t * 8) * 2) + (z * 2)
+						(-4 * 2) + ((t * 8) * 2) + (z * 2)
 					),
 					t
 				));
@@ -126,6 +126,8 @@ int main() {
 
 			if (e.type == SDL_KEYDOWN) {
 				GLchar k = e.key.keysym.sym;
+
+				cam.orientation = !cam.orientation;
 
 				if (k == SDLK_F5) {
 					cam.orientation = !cam.orientation;
