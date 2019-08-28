@@ -67,6 +67,8 @@ int main() {
 		glm::value_ptr(mv)
 	);
 
+	bool team = false;
+
 	std::vector<Obj> coll;
 	for (
 		unsigned int t = 0;
@@ -165,10 +167,20 @@ int main() {
 						for (auto& piece : coll) {
 							piece.active = false;
 						}
-						coll[p].active = true;
+						coll[p + (team * 16)].active = true;
 					} else {
 						p = 0;
 					}
+				}
+
+				if (k == SDLK_RETURN) {
+					team = !team;
+					p = 0;
+
+					for (auto& piece : coll) {
+						piece.active = false;
+					}
+					coll[p + (team * 16)].active = true;
 				}
 
 				// position
