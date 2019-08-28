@@ -15,8 +15,8 @@ int main() {
 		glm::vec3(0, 20, 7.5),
 		70.0f,
 		800.0 / 600.0,
-		0.1f,
-		100.0f
+		0.001f,
+		100000.0f
 	);
 
 	Prog board("checker");
@@ -73,9 +73,9 @@ int main() {
 		t < 2;
 		t++
 	) {
-			for (
-			unsigned int x = 0;
-			x < 8;
+		for (
+			signed int x = -4;
+			x < 4;
 			x++
 		) {
 			for (
@@ -88,7 +88,7 @@ int main() {
 					glm::vec3(
 						(x * 2),
 						0,
-						(z * 2) + ((t * 8) * 2)
+						/*(-4 * 2)*/ + ((t * 8) * 2) + (z * 2)
 					),
 					t
 				));
