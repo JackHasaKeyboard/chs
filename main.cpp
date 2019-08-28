@@ -27,10 +27,10 @@ int main() {
 	glBindVertexArray(vao);
 
 	const GLfloat vtc[] = {
-		-8.0, -8.0,
-		8.0, -8.0,
-		8.0, 8.0,
-		-8.0, 8.0
+		-8.0, 0.0, -8.0,
+		8.0, 0.0, -8.0,
+		8.0, 0.0, 8.0,
+		-8.0, 0.0, 8.0
 	};
 
 	GLuint vbo;
@@ -38,12 +38,11 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof vtc, vtc, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
 	glEnableVertexAttribArray(0);
 
 	// MVP
 	Trans trans;
-	trans.getRot()->x = 90;
 
 	glm::mat4 mvp = trans.getMvp(cam);
 	glUniformMatrix4fv(
