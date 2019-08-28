@@ -46,21 +46,26 @@ int main() {
 	trans.getRot()->x = 90;
 
 	glm::mat4 mvp = trans.getMvp(cam);
-	glUniformMatrix4fv(glGetUniformLocation(board.id, "matr"), 1, GL_FALSE, glm::value_ptr(mvp));
+	glUniformMatrix4fv(
+		glGetUniformLocation(board.id, "mvp"),
+		1,
+		GL_FALSE,
+		glm::value_ptr(mvp)
+	);
 	
+	// team
+	bool t = false;
+	glUniform1i(
+		glGetUniformLocation(board.id, "t"),
+		t
+	);
+
 	// position
 	glm::vec2 mv = glm::vec2(6, 6);
 	glUniform2fv(
 		glGetUniformLocation(board.id, "mv"),
 		1,
 		glm::value_ptr(mv)
-	);
-
-	// team
-	bool t = false;
-	glUniform1i(
-		glGetUniformLocation(board.id, "t"),
-		t
 	);
 
 	std::vector<Obj> coll;
