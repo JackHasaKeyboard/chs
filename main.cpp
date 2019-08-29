@@ -20,7 +20,6 @@ int main() {
 	);
 
 	Prog board("checker");
-	board.use();
 
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
@@ -41,34 +40,12 @@ int main() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
 	glEnableVertexAttribArray(0);
 
-	// MVP
-	Trans trans;
-
-	glm::mat4 mvp = trans.getMvp(cam);
-	glUniformMatrix4fv(
-		glGetUniformLocation(board.id, "mvp"),
-		1,
-		GL_FALSE,
-		glm::value_ptr(mvp)
-	);
-	
-	// team
-	bool t = false;
-	glUniform1i(
-		glGetUniformLocation(board.id, "t"),
-		t
-	);
-
-	// position
 	glm::vec2 mv = glm::vec2(6, 6);
-	glUniform2fv(
-		glGetUniformLocation(board.id, "mv"),
-		1,
-		glm::value_ptr(mv)
-	);
+	Trans trans;
+	glm::mat4 mvp = trans.getMvp(cam);
+	bool t = false;
 
 	bool team = false;
-
 	std::vector<Obj> coll;
 	for (
 		unsigned int t = 0;
@@ -107,6 +84,7 @@ int main() {
 		start[2],
 		curr[2],
 		delta;
+
 	while (true) {
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_MOUSEBUTTONDOWN) {
@@ -182,19 +160,37 @@ int main() {
 					}
 					coll[p + (team * 16)].active = true;
 				}
-
-				// position
-				glUniform2fv(
-					glGetUniformLocation(board.id, "mv"),
-					1,
-					glm::value_ptr(mv)
-				);
 			}
 
 			disp.clear(0, 0, 0, 1);
 
+			board.use();
+
+			// MVP
+			glUniformMatrix4fv(
+				glGetUniformLocation(board.id, "mvp"),
+				1,
+				GL_FALSE,
+				glm::value_ptr(mvp)
+			);
+			
+			// team
+			glUniform1i(
+				glGetUniformLocation(board.id, "t"),
+				t
+			);
+
+			// position
+			glUniform2fv(
+				glGetUniformLocation(board.id, "mv"),
+				1,
+				glm::value_ptr(mv)
+			);
+
 			glBindVertexArray(vao);
 			glDrawArrays(GL_QUADS, 0, 4);
+			board.unUse();
+
 			for (Obj& piece : coll) {
 				piece.draw(cam);
 			}

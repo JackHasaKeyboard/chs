@@ -76,4 +76,9 @@ class Prog {
 			glLinkProgram(this->id);
 			glUseProgram(this->id);
 		}
+
+		void unUse() {
+			glLinkProgram(0);
+			glUseProgram(0);
+		}
 };

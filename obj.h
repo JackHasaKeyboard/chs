@@ -67,5 +67,7 @@ class Obj {
 			);
 
 			mesh->draw();
+
+			prog->unUse();
 		}
 };
