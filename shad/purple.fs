@@ -3,7 +3,7 @@
 uniform int t;
 uniform int active;
 
-in vec3 normCalc;
+flat in vec3 normCalc;
 out vec4 col;
 
 vec3 red = vec3(1.0, 0.0, 0.0);

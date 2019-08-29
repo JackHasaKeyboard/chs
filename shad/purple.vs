@@ -6,7 +6,7 @@ uniform mat4 norm;
 layout (location = 0) in vec3 a_pos;
 layout (location = 1) in vec3 a_norm;
 
-out vec3 normCalc;
+flat out vec3 normCalc;
 
 void main() {
 	gl_Position = mvp * vec4(a_pos, 1.0);
