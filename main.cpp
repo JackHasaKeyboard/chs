@@ -40,7 +40,7 @@ int main() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
 	glEnableVertexAttribArray(0);
 
-	glm::vec2 mv = glm::vec2(6, 6);
+	glm::vec2 curs = glm::vec2(6, 6);
 	Trans trans;
 	glm::mat4 mvp = trans.getMvp(cam);
 	bool t = false;
@@ -115,26 +115,26 @@ int main() {
 				}
 
 				if (k == SDLK_a) {
-					if (mv[0] > 0) {
-						mv[0]--;
+					if (curs[0] > 0) {
+						curs[0]--;
 					}
 				}
 
 				if (k == SDLK_d) {
-					if (mv[0] < 8) {
-						mv[0]++;
+					if (curs[0] < 8) {
+						curs[0]++;
 					}
 				}
 
 				if (k == SDLK_s) {
-					if (mv[1] > 0) {
-						mv[1]--;
+					if (curs[1] > 0) {
+						curs[1]--;
 					}
 				}
 
 				if (k == SDLK_w) {
-					if (mv[1] < 8) {
-						mv[1]++;
+					if (curs[1] < 8) {
+						curs[1]++;
 					}
 				}
 
@@ -180,11 +180,11 @@ int main() {
 				t
 			);
 
-			// position
+			// cursor
 			glUniform2fv(
-				glGetUniformLocation(board.id, "mv"),
+				glGetUniformLocation(board.id, "curs"),
 				1,
-				glm::value_ptr(mv)
+				glm::value_ptr(curs)
 			);
 
 			glBindVertexArray(vao);

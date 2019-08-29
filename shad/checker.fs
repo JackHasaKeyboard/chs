@@ -3,7 +3,7 @@
 out vec4 col;
 
 uniform int t;
-uniform vec2 mv;
+uniform vec2 curs;
 
 vec3 grey[2] = vec3[2](
 	vec3(34 / 255.0, 34 / 255.0, 34 / 255.0),
@@ -23,10 +23,10 @@ void main() {
 	}
 
 	if (
-		gl_FragCoord.x > (mv.x * 50) &&
-		gl_FragCoord.x < ((mv.x * 50) + (1 * 50)) &&
-		gl_FragCoord.y > ((mv.y * 50)) &&
-		gl_FragCoord.y < ((mv.y * 50) + (1 * 50))
+		gl_FragCoord.x > (curs.x * 50) &&
+		gl_FragCoord.x < ((curs.x * 50) + (1 * 50)) &&
+		gl_FragCoord.y > ((curs.y * 50)) &&
+		gl_FragCoord.y < ((curs.y * 50) + (1 * 50))
 	) {
 		col = vec4(purple[t], 1.0);
 	}
