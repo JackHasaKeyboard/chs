@@ -100,6 +100,8 @@ int main() {
 					delta = start[0] - curr[0];
 
 					cam.pitch(delta / 1000.0);
+
+					std::cout << delta << std::endl;
 				}
 			}
 
@@ -152,6 +154,13 @@ int main() {
 				}
 
 				if (k == SDLK_RETURN) {
+					glm::vec2 asdf = glm::vec2(
+						curs[0] * 2,
+						((float) (-4 * 2)) + ((team * 8) * 2) + (curs[1] * 2)
+					);
+
+					coll[p + (team * 16)].mv(cam, asdf);
+
 					team = !team;
 					p = 0;
 

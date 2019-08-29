@@ -70,4 +70,11 @@ class Obj {
 
 			prog->unUse();
 		}
+
+		void mv(Cam& cam, glm::vec2 curs) {
+			this->loc = glm::vec3(curs[0], 0, curs[1]);
+			this->trans->setPos(loc);
+
+			draw(cam);
+		}
 };
