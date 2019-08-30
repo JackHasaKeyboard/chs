@@ -6,13 +6,12 @@
 #include "cam.h"
 
 struct Trans {
-	private:
+	public:
 		glm::vec3
 			pos,
 			rot,
 			scale;
 
-	public:
 		Trans(
 			const glm::vec3& pos = glm::vec3(),
 			const glm::vec3& rot = glm::vec3(),

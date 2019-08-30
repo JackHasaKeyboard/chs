@@ -104,9 +104,13 @@ int main() {
 
 					delta = start[0] - curr[0];
 
-					cam.pitch(delta / 1000.0);
+					trans.rot[1] = (delta / 400.0);
+					mvp = trans.getMvp(cam);
 
-					std::cout << delta << std::endl;
+					for (Obj& piece : coll) {
+						piece.trans->rot[1] = (delta / 400.0);
+						piece.mvp = trans.getMvp(cam);
+					}
 				}
 			}
 
