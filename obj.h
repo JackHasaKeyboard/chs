@@ -15,6 +15,7 @@ class Obj {
 		Trans* trans;
 
 		glm::vec3 loc;
+		glm::vec3 rot;
 		glm::mat4 mvp;
 
 		bool

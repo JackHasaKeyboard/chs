@@ -119,6 +119,11 @@ int main() {
 
 				if (k == 62 /* F5 */) {
 					cam.orientation = !cam.orientation;
+
+					for (auto& piece : coll) {
+						piece.rot[0] = cam.orientation * 90;
+						piece.trans->setRot(piece.rot);
+					}
 				}
 
 				if (k == SDLK_a) {
