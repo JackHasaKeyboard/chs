@@ -85,8 +85,13 @@ int main() {
 		curr[2],
 		delta;
 
-	while (true) {
+	bool run = true;
+	while (run) {
 		while (SDL_PollEvent(&e)) {
+			if (e.type == SDL_QUIT) {
+				run = false;
+			}
+
 			if (e.type == SDL_MOUSEBUTTONDOWN) {
 				down = true;
 
@@ -207,6 +212,5 @@ int main() {
 			disp.update();
 		}
 	}
-
 	return 0;
 }
