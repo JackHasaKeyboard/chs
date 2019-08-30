@@ -72,6 +72,8 @@ class Disp {
 			}
 
 			open = true;
+
+			glEnable(GL_DEPTH_TEST);
 		}
 
 		void clear(
