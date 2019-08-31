@@ -8,6 +8,7 @@
 struct Cam {
 	public:
 		glm::mat4 proj;
+		glm::mat4 orth;
 		glm::vec3
 			pos,
 			fwd,
@@ -26,6 +27,7 @@ struct Cam {
 			this->fwd = glm::vec3(0.0f, 0.0f, 1.0f);
 			this->up = glm::vec3(0.0f, 1.0f, 0.0f);
 			this->proj = glm::perspective(fov, aspect, zNear, zFar);
+			this->orth = glm::ortho(20.0f, -20.0f, -30.0f, 30.0f, 0.001f, 100000.0f);
 
 			this->orientation = false;
 		}
@@ -34,7 +36,7 @@ struct Cam {
 			if (this->orientation) {
 				this->pos = glm::vec3(0, 40, 0);
 
-				return proj * glm::lookAt(
+				return orth * glm::lookAt(
 					pos,
 					fwd,
 					up
