@@ -197,9 +197,9 @@ int main() {
 			}
 
 			if (e.type == SDL_KEYDOWN) {
-				GLchar k = e.key.keysym.sym;
+				GLchar code = e.key.keysym.scancode;
 
-				if (k == 62 /* F5 */) {
+				if (code == SDL_SCANCODE_F5) {
 					cam.orientation = !cam.orientation;
 
 					for (auto& piece : coll) {
@@ -208,31 +208,31 @@ int main() {
 					}
 				}
 
-				if (k == SDLK_a) {
+				if (code == SDL_SCANCODE_LEFT) {
 					if (curs[0] > 0) {
 						curs[0]--;
 					}
 				}
 
-				if (k == SDLK_d) {
-					if (curs[0] < 7) {
-						curs[0]++;
-					}
-				}
-
-				if (k == SDLK_s) {
+				if (code == SDL_SCANCODE_DOWN) {
 					if (curs[1] > 0) {
 						curs[1]--;
 					}
 				}
 
-				if (k == SDLK_w) {
+				if (code == SDL_SCANCODE_RIGHT) {
+					if (curs[0] < 7) {
+						curs[0]++;
+					}
+				}
+
+				if (code == SDL_SCANCODE_UP) {
 					if (curs[1] < 7) {
 						curs[1]++;
 					}
 				}
 
-				if (k == SDLK_TAB) {
+				if (code == SDL_SCANCODE_TAB) {
 					if (p < 15) {
 						p++;
 
@@ -245,7 +245,7 @@ int main() {
 					}
 				}
 
-				if (k == SDLK_RETURN) {
+				if (code == SDL_SCANCODE_RETURN) {
 					glm::vec2 asdf = glm::vec2(
 						curs[0] * 2,
 						((float) (-4 * 2)) + ((team * 8) * 2) + (curs[1] * 2)
