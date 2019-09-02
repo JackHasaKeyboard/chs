@@ -11,23 +11,6 @@
 #include "trans.h"
 #include "obj.h"
 
-std::string ld(std::string name) {
-	std::ifstream in;
-	in.open("./" + name);
-
-	std::string cont;
-	for (
-		std::string l;
-		std::getline(in, l);
-	) {
-		cont += l + "\n";
-	}
-
-	in.close();
-
-	return cont;
-}
-
 void renderText(Disp& disp, std::string msg) {
 	TTF_Init();
 
