@@ -28,18 +28,14 @@ std::string ld(std::string name) {
 	return cont;
 }
 
-void renderText(
-	Disp& disp,
-	std::string msg
-) {
-	/* text */
+void renderText(Disp& disp, std::string msg) {
 	TTF_Init();
 
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
   glLoadIdentity();
 
-  gluOrtho2D(0, 500, 0, 500);
+  gluOrtho2D(0, 800, 0, 600);
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
@@ -53,15 +49,12 @@ void renderText(
   glGenTextures(1, &tex);
   glBindTexture(GL_TEXTURE_2D, tex);
 
-  TTF_Font* font = TTF_OpenFont(
-		"terminus.bdf",
-		12
-  );
+  TTF_Font* font = TTF_OpenFont("terminus.bdf", 12);
 
   SDL_Surface* surf = TTF_RenderText_Blended(
 		font,
 		std::string("$ " + msg).c_str(),
-		{95, 82, 134, 255}
+		{95, 82, 134}
   );
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -78,80 +71,20 @@ void renderText(
 		surf->pixels
   );
 
-	/* std::cout << "Error: " << TTF_GetError() << std::endl; */
-
-	/* shader */
-	std::string
-		fragTxt = rd(
-			"shad.fs"
-		),
-		vtxTxt = rd(
-			"shad.vs"
-		);
-
-	const char* srcFrag = fragTxt.c_str();
-	const char* srcVtx = vtxTxt.c_str();
-
-	GLint succ;
-	char buff[] = "";
-
-	// vertex
-	GLuint shadVtx = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(shadVtx, 1, &srcVtx, NULL);
-	glCompileShader(shadVtx);
-
-	glGetShaderiv(shadVtx, GL_COMPILE_STATUS, &succ);
-
-	if (!succ) {
-		glGetShaderInfoLog(shadVtx, 512, NULL, buff);
-		std::cout << "Vertex error: " << std::endl;
-		std::cout << buff << std::endl;
-	}
-
-	// fragment
-	GLuint shadFrag = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(shadFrag, 1, &srcFrag, NULL);
-	glCompileShader(shadFrag);
-
-	glGetShaderiv(shadFrag, GL_COMPILE_STATUS, &succ);
-
-	if (!succ) {
-		glGetShaderInfoLog(shadFrag, 512, NULL, buff);
-		std::cout << "Vertex error: " << std::endl;
-		std::cout << buff << std::endl;
-	}
-
-	// program
-	GLuint prog = glCreateProgram();
-	glAttachShader(prog, shadVtx);
-	glAttachShader(prog, shadFrag);
-
-	glBindFragDataLocation(prog, 0, "col");
-
-	glLinkProgram(prog);
-
-
-	glBegin(GL_QUADS); {
-		glTexCoord2f(0, 0); glVertex2f(0, 0);
-		glTexCoord2f(1, 0); glVertex2f(surf->w, 0);
-		glTexCoord2f(1, 1); glVertex2f(surf->w, surf->h);
-		glTexCoord2f(0, 1); glVertex2f(0, surf->h);
-	}
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 1); glVertex2f(0, 0);
+	glTexCoord2f(1, 1); glVertex2f(surf->w, 0);
+	glTexCoord2f(1, 0); glVertex2f(surf->w, surf->h);
+	glTexCoord2f(0, 0); glVertex2f(0, surf->h);
 	glEnd();
-
 
   glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
   glEnable(GL_DEPTH_TEST);
 
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
-
-  glDeleteTextures(1, &tex);
   TTF_CloseFont(font);
   SDL_FreeSurface(surf);
+  glDeleteTextures(1, &tex);
 }
 
 int main() {
