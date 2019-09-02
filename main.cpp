@@ -40,7 +40,7 @@ int main() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
 	glEnableVertexAttribArray(0);
 
-	glm::vec2 curs = glm::vec2(6, 6);
+	glm::vec2 curs = glm::vec2(1, 0);
 	Trans trans;
 	glm::mat4 mvp = trans.getMvp(cam);
 	bool t = false;
@@ -137,7 +137,7 @@ int main() {
 				}
 
 				if (k == SDLK_d) {
-					if (curs[0] < 8) {
+					if (curs[0] < 7) {
 						curs[0]++;
 					}
 				}
@@ -149,7 +149,7 @@ int main() {
 				}
 
 				if (k == SDLK_w) {
-					if (curs[1] < 8) {
+					if (curs[1] < 7) {
 						curs[1]++;
 					}
 				}

@@ -24,10 +24,10 @@ void main() {
 	}
 
 	if (
-		coord.x > (curs.x * 50) &&
-		coord.x < ((curs.x * 50) + (1 * 50)) &&
-		coord.y > ((curs.y * 50)) &&
-		coord.y < ((curs.y * 50) + (1 * 50))
+		coord.x > ((curs.x - 4) * 2) &&
+		coord.x < (((curs.x - 4) * 2) + (1 * 2)) &&
+		coord.y > (((curs.y - 4) * 2)) &&
+		coord.y < (((curs.y - 4) * 2) + (1 * 2))
 	) {
 		col = vec4(purple[t], 1.0);
 	}
