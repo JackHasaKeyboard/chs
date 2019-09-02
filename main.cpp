@@ -164,6 +164,7 @@ int main() {
 		delta;
 
 	bool run = true;
+	std::string buff;
 	while (run) {
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
@@ -197,7 +198,23 @@ int main() {
 			}
 
 			if (e.type == SDL_KEYDOWN) {
-				GLchar code = e.key.keysym.scancode;
+				GLchar
+					code = e.key.keysym.scancode,
+					k = e.key.keysym.sym;
+
+				if (k > ' ' && k < '~') {
+					buff.push_back(k);
+				}
+
+				if (k == SDLK_BACKSPACE) {
+					if (!buff.empty()) {
+						buff.pop_back();
+					}
+				}
+
+				if (k == SDLK_RETURN) {
+					buff.clear();
+				}
 
 				if (code == SDL_SCANCODE_F5) {
 					cam.orientation = !cam.orientation;
@@ -298,7 +315,7 @@ int main() {
 
 			renderText(
 				disp,
-				"Haskell rulez"
+				buff
 			);
 
 			disp.update();
