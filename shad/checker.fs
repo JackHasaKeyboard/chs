@@ -1,5 +1,6 @@
 #version 150
 
+in vec2 coord;
 out vec4 col;
 
 uniform int t;
@@ -16,17 +17,17 @@ vec3 purple[2] = vec3[2](
 );
 
 void main() {
-	if ((mod(gl_FragCoord.x, 100.0) < 50.0 && mod(gl_FragCoord.y, 100.0) < 50.0) || (mod(gl_FragCoord.x, 100.0) > 50.0 && mod(gl_FragCoord.y, 100.0) > 50.0)) {
+	if ((mod(coord.x, 4) < 2 && mod(coord.y, 4) < 2) || (mod(coord.x, 4) > 2 && mod(coord.y, 4) > 2)) {
 		col = (vec4(grey[0], 1.0));
 	} else {
 		col = vec4(grey[1], 1.0);
 	}
 
 	if (
-		gl_FragCoord.x > (curs.x * 50) &&
-		gl_FragCoord.x < ((curs.x * 50) + (1 * 50)) &&
-		gl_FragCoord.y > ((curs.y * 50)) &&
-		gl_FragCoord.y < ((curs.y * 50) + (1 * 50))
+		coord.x > (curs.x * 50) &&
+		coord.x < ((curs.x * 50) + (1 * 50)) &&
+		coord.y > ((curs.y * 50)) &&
+		coord.y < ((curs.y * 50) + (1 * 50))
 	) {
 		col = vec4(purple[t], 1.0);
 	}
