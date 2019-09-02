@@ -31,4 +31,13 @@ void main() {
 	) {
 		col = vec4(purple[t], 1.0);
 	}
+
+	if (
+		(coord.x < -8) ||
+		(coord.y < -8) ||
+		(coord.x > 8) ||
+		(coord.y > 8)
+	) {
+		col = vec4(grey[0], 1.0);
+	}
 }
