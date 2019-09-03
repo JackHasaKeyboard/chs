@@ -106,34 +106,103 @@ int main() {
 	glm::mat4 mvp = trans.getMvp(cam);
 	bool t = false;
 
-	bool team = false;
+	bool turn = false;
 	std::vector<Obj> coll;
+
 	for (
-		unsigned int t = 0;
-		t < 2;
-		t++
+		unsigned int team = 0;
+		team < 2;
+		team++
 	) {
 		for (
-			signed int x = -4;
-			x < 4;
+			unsigned int x = 0;
+			x < 8;
 			x++
 		) {
-			for (
-				unsigned int z = 0;
-				z < 2;
-				z++
-			) {
-				coll.push_back(Obj(
-					"pawn",
-					glm::vec3(
-						(x * 2),
-						0,
-						((float) (-4 * 2)) + ((t * 8) * 2) + (z * 2)
-					),
-					t
-				));
-			}
+			coll.push_back(Obj(
+				"pawn",
+				glm::vec3(
+					(-4 * 2.0) + (x * 2.0),
+					0.0,
+					8.0 + ((-1.0 * team) * 16.0)
+				),
+				t
+			));
 		}
+
+		for (
+			unsigned int x = 0;
+			x < 2;
+			x++
+		) {
+			bool side = x % 2;
+
+			coll.push_back(Obj(
+				"rook",
+				glm::vec3(
+					8.0 + ((-1.0 * side) * (8.0 * 2.0)),
+					0,
+					8.0 + ((-1.0 * team) * 16.0) + 2.0
+				),
+				t
+			));
+		}
+
+		for (
+			unsigned int x = 0;
+			x < 2;
+			x++
+		) {
+			bool side = x % 2;
+
+			coll.push_back(Obj(
+				"knight",
+				glm::vec3(
+					-6.0 + ((-1.0 * side) * (-6.0 * 2.0)),
+					0,
+					8.0 + ((-1.0 * team) * 16.0) + 2.0
+				),
+				t
+			));
+		}
+
+		for (
+			unsigned int x = 0;
+			x < 2;
+			x++
+		) {
+			bool side = x % 2;
+
+			coll.push_back(Obj(
+				"bishop",
+				glm::vec3(
+					-4.0 + ((-1.0 * side) * (-4.0 * 2.0)),
+					0,
+					8.0 + ((-1.0 * team) * 16.0) + 2.0
+				),
+				t
+			));
+		}
+
+		coll.push_back(Obj(
+			"king",
+			glm::vec3(
+				-2.0,
+				0,
+				8.0 + ((-1.0 * team) * 16.0) + 2.0
+			),
+			t
+		));
+
+		coll.push_back(Obj(
+			"queen",
+			glm::vec3(
+				2.0,
+				0,
+				8.0 + ((-1.0 * team) * 16.0) + 2.0
+			),
+			t
+		));
 	}
 
 	int p = 0;
@@ -239,7 +308,7 @@ int main() {
 						for (auto& piece : coll) {
 							piece.active = false;
 						}
-						coll[p + (team * 16)].active = true;
+						coll[p + (turn * 16)].active = true;
 					} else {
 						p = 0;
 					}
@@ -248,18 +317,18 @@ int main() {
 				if (code == SDL_SCANCODE_RETURN) {
 					glm::vec2 asdf = glm::vec2(
 						curs[0] * 2,
-						((float) (-4 * 2)) + ((team * 8) * 2) + (curs[1] * 2)
+						((float) (-4 * 2)) + ((turn * 8) * 2) + (curs[1] * 2)
 					);
 
-					coll[p + (team * 16)].mv(cam, asdf);
+					coll[p + (turn * 16)].mv(cam, asdf);
 
-					team = !team;
+					turn = !turn;
 					p = 0;
 
 					for (auto& piece : coll) {
 						piece.active = false;
 					}
-					coll[p + (team * 16)].active = true;
+					coll[p + (turn * 16)].active = true;
 				}
 			}
 
