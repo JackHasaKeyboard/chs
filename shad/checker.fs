@@ -5,6 +5,7 @@ out vec4 col;
 
 uniform int t;
 uniform vec2 curs;
+uniform vec2[3] legal;
 
 vec3 grey[2] = vec3[2](
 	vec3(34 / 255.0, 34 / 255.0, 34 / 255.0),
@@ -29,17 +30,17 @@ void main() {
 		col = vec4(purple[t], 1.0);
 	}
 
-	vec2 move[3] = vec2[3](
-		vec2(2, 3),
-		vec2(2, 1),
-		vec2(3, 1)
-	);
 	for (
 		int i = 0;
 		i < 3;
 		i++
 	) {
-		if (coord.x > (move[i][0] * 2) &&coord.y > (move[i][1] * 2) &&coord.x < (move[i][0] * 2) + 2 &&coord.y < (move[i][1] * 2) + 2) {
+		if (
+			coord.x > (legal[i][0] * 2) &&
+			coord.y > (legal[i][1] * 2) &&
+			coord.x < (legal[i][0] * 2) + 2 &&
+			coord.y < (legal[i][1] * 2) + 2
+		) {
 			col = vec4(mix(grey[int(b)], purple[t], 0.5), 1.0);
 		}
 	}

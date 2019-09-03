@@ -351,6 +351,24 @@ int main() {
 				glm::value_ptr(curs)
 			);
 
+			// legal
+			glm::vec2 legal[3] = {
+				glm::vec2(1.0, 0.0),
+				glm::vec2(2.0, 0.0),
+				glm::vec2(3.0, 0.0)
+			};
+			for (
+				int i = 0;
+				i < 3;
+				i++
+			) {
+				glUniform2f(
+					glGetUniformLocation(board.id, std::string("legal[" + std::to_string(i) + "]").c_str()),
+					legal[i][0],
+					legal[i][1]
+				);
+			}
+
 			glBindVertexArray(vao);
 			glDrawArrays(GL_QUADS, 0, 4);
 			board.unUse();
