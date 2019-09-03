@@ -8,7 +8,7 @@
 #include "mesh.h"
 #include "trans.h"
 
-class Obj {
+class Piece {
 	public:
 		Mesh* mesh;
 		Prog* prog;
@@ -22,7 +22,7 @@ class Obj {
 			t,
 			active;
 
-		Obj(std::string mesh, glm::vec3 loc, bool t) {
+		Piece(std::string mesh, glm::vec3 loc, bool t) {
 			this->mesh = new Mesh(mesh);
 			this->prog = new Prog("purple");
 
@@ -71,11 +71,82 @@ class Obj {
 
 			prog->unUse();
 		}
+};
+
+class Pawn : public Piece {
+	public:
+		Pawn(glm::vec3 pos, bool t) : Piece(
+			"pawn",
+			pos,
+			t
+		) {
+		}
 
 		void mv(Cam& cam, glm::vec2 curs) {
-			this->loc = glm::vec3(curs[0], 0, curs[1]);
-			this->trans->setPos(loc);
+		}
+};
 
-			draw(cam);
+class Rook : public Piece {
+	public:
+		Rook(glm::vec3 pos, bool t) : Piece(
+			"rook",
+			pos,
+			t
+		) {
+		}
+
+		void mv(Cam& cam, glm::vec2 curs) {
+		}
+};
+
+class Knight : public Piece {
+	public:
+		Knight(glm::vec3 pos, bool t) : Piece(
+			"knight",
+			pos,
+			t
+		) {
+		}
+
+		void mv(Cam& cam, glm::vec2 curs) {
+		}
+};
+
+class Bishop : public Piece {
+	public:
+		Bishop(glm::vec3 pos, bool t) : Piece(
+			"bishop",
+			pos,
+			t
+		) {
+		}
+
+		void mv(Cam& cam, glm::vec2 curs) {
+		}
+};
+
+class King : public Piece {
+	public:
+		King(glm::vec3 pos, bool t) : Piece(
+			"king",
+			pos,
+			t
+		) {
+		}
+
+		void mv(Cam& cam, glm::vec2 curs) {
+		}
+};
+
+class Queen : public Piece {
+	public:
+		Queen(glm::vec3 pos, bool t) : Piece(
+			"queen",
+			pos,
+			t
+		) {
+		}
+
+		void mv(Cam& cam, glm::vec2 curs) {
 		}
 };

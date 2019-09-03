@@ -9,7 +9,7 @@
 #include "disp.h"
 #include "shad.h"
 #include "trans.h"
-#include "obj.h"
+#include "piece.h"
 
 void renderText(Disp& disp, std::string msg) {
 	TTF_Init();
@@ -107,7 +107,7 @@ int main() {
 	bool t = false;
 
 	bool turn = false;
-	std::vector<Obj> coll;
+	std::vector<Piece> coll;
 
 	for (
 		unsigned int team = 0;
@@ -119,8 +119,7 @@ int main() {
 			x < 8;
 			x++
 		) {
-			coll.push_back(Obj(
-				"pawn",
+			coll.push_back(Pawn(
 				glm::vec3(
 					(-4 * 2.0) + (x * 2.0),
 					0.0,
@@ -137,8 +136,7 @@ int main() {
 		) {
 			bool side = x % 2;
 
-			coll.push_back(Obj(
-				"rook",
+			coll.push_back(Rook(
 				glm::vec3(
 					8.0 + ((-1.0 * side) * (8.0 * 2.0)),
 					0,
@@ -155,8 +153,7 @@ int main() {
 		) {
 			bool side = x % 2;
 
-			coll.push_back(Obj(
-				"knight",
+			coll.push_back(Knight(
 				glm::vec3(
 					-6.0 + ((-1.0 * side) * (-6.0 * 2.0)),
 					0,
@@ -173,8 +170,7 @@ int main() {
 		) {
 			bool side = x % 2;
 
-			coll.push_back(Obj(
-				"bishop",
+			coll.push_back(Bishop(
 				glm::vec3(
 					-4.0 + ((-1.0 * side) * (-4.0 * 2.0)),
 					0,
@@ -184,8 +180,7 @@ int main() {
 			));
 		}
 
-		coll.push_back(Obj(
-			"king",
+		coll.push_back(King(
 			glm::vec3(
 				-2.0,
 				0,
@@ -194,8 +189,7 @@ int main() {
 			t
 		));
 
-		coll.push_back(Obj(
-			"queen",
+		coll.push_back(Queen(
 			glm::vec3(
 				2.0,
 				0,
@@ -238,7 +232,7 @@ int main() {
 					trans.rot[1] = (delta / 400.0);
 					mvp = trans.getMvp(cam);
 
-					for (Obj& piece : coll) {
+					for (Piece& piece : coll) {
 						piece.trans->rot[1] = (delta / 400.0);
 						piece.mvp = trans.getMvp(cam);
 					}
@@ -320,7 +314,7 @@ int main() {
 						((float) (-4 * 2)) + ((turn * 8) * 2) + (curs[1] * 2)
 					);
 
-					coll[p + (turn * 16)].mv(cam, asdf);
+					/* coll[p + (turn * 16)].mv(cam, asdf); */
 
 					turn = !turn;
 					p = 0;
@@ -361,7 +355,7 @@ int main() {
 			glDrawArrays(GL_QUADS, 0, 4);
 			board.unUse();
 
-			for (Obj& piece : coll) {
+			for (Piece& piece : coll) {
 				piece.draw(cam);
 			}
 
