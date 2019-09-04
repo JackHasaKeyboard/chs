@@ -125,7 +125,7 @@ int main() {
 					0.0,
 					8.0 + ((-1.0 * team) * 16.0)
 				),
-				t
+				team
 			));
 		}
 
@@ -337,7 +337,7 @@ int main() {
 				GL_FALSE,
 				glm::value_ptr(mvp)
 			);
-			
+
 			// team
 			glUniform1i(
 				glGetUniformLocation(board.id, "t"),
@@ -352,14 +352,10 @@ int main() {
 			);
 
 			// legal
-			glm::vec2 legal[3] = {
-				glm::vec2(1.0, 0.0),
-				glm::vec2(2.0, 0.0),
-				glm::vec2(3.0, 0.0)
-			};
+			std::vector<glm::vec2> legal = coll[p + (turn * 16)].legal;
 			for (
 				int i = 0;
-				i < 3;
+				i < legal.size();
 				i++
 			) {
 				glUniform2f(

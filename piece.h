@@ -22,6 +22,8 @@ class Piece {
 			t,
 			active;
 
+		std::vector<glm::vec2> legal;
+
 		Piece(std::string mesh, glm::vec3 loc, bool t) {
 			this->mesh = new Mesh(mesh);
 			this->prog = new Prog("purple");
@@ -80,9 +82,12 @@ class Pawn : public Piece {
 			pos,
 			t
 		) {
-		}
-
-		void mv(Cam& cam, glm::vec2 curs) {
+			this->legal.push_back(
+				glm::vec2(
+					0.0,
+					(-4.0) + this->loc.z
+				)
+			);
 		}
 };
 
@@ -93,9 +98,31 @@ class Rook : public Piece {
 			pos,
 			t
 		) {
-		}
+			for (
+				int x = -4;
+				x < 4;
+				x++
+			) {
+				this->legal.push_back(
+					glm::vec2(
+						(float) (this->loc.x + x),
+						0.0
+					)
+				);
+			}
 
-		void mv(Cam& cam, glm::vec2 curs) {
+			for (
+				int z = -4;
+				z < 4;
+				z++
+			) {
+				this->legal.push_back(
+					glm::vec2(
+						0.0,
+						(float) (this->loc.z + z)
+					)
+				);
+			}
 		}
 };
 
@@ -106,9 +133,30 @@ class Knight : public Piece {
 			pos,
 			t
 		) {
-		}
-
-		void mv(Cam& cam, glm::vec2 curs) {
+			for (
+				int i = 0;
+				i < 2;
+				i++
+			) {
+				for (
+					int x = 0;
+					x < 2;
+					x++
+				) {
+					for (
+						int z = 0;
+						z < 2;
+						z++
+					) {
+						this->legal.push_back(
+							glm::vec2(
+								(float) (loc.x + ((-1 * x) * 3) + (-1 * i)),
+								(float) (loc.z + ((-1 * z) * 3) + (1 * i))
+							)
+						);
+					}
+				}
+			}
 		}
 };
 
@@ -119,9 +167,31 @@ class Bishop : public Piece {
 			pos,
 			t
 		) {
-		}
+			for (
+				int p = -4;
+				p < 4;
+				p++
+			) {
+				this->legal.push_back(
+					glm::vec2(
+						(float) (loc.x + p),
+						(float) (loc.z + p)
+					)
+				);
+			}
 
-		void mv(Cam& cam, glm::vec2 curs) {
+			for (
+				int p = -4;
+				p < 4;
+				p++
+			) {
+				this->legal.push_back(
+					glm::vec2(
+						(float) (loc.x + -p),
+						(float) (loc.z + p)
+					)
+				);
+			}
 		}
 };
 
@@ -132,9 +202,24 @@ class King : public Piece {
 			pos,
 			t
 		) {
-		}
-
-		void mv(Cam& cam, glm::vec2 curs) {
+			for (
+				int x = 0;
+				x < 2;
+				x++
+			) {
+				for (
+					int z = 0;
+					z < 2;
+					z++
+				) {
+					this->legal.push_back(
+						glm::vec2(
+							(float) this->loc.x + ((-1 * x) * 1),
+							(float) this->loc.z + ((-1 * z) * 1)
+						)
+					);
+				}
+			}
 		}
 };
 
@@ -145,8 +230,56 @@ class Queen : public Piece {
 			pos,
 			t
 		) {
-		}
+			for (
+				int x = -4;
+				x < 4;
+				x++
+			) {
+				this->legal.push_back(
+					glm::vec2(
+						(float) x,
+						0.0
+					)
+				);
+			}
 
-		void mv(Cam& cam, glm::vec2 curs) {
+			for (
+				int z = -4;
+				z < 4;
+				z++
+			) {
+				this->legal.push_back(
+					glm::vec2(
+						0.0,
+						(float) z
+					)
+				);
+			}
+
+			for (
+				int p = -4;
+				p < 4;
+				p++
+			) {
+				this->legal.push_back(
+					glm::vec2(
+						(float) p,
+						(float) p
+					)
+				);
+			}
+
+			for (
+				int p = -4;
+				p < 4;
+				p++
+			) {
+				this->legal.push_back(
+					glm::vec2(
+						(float) -p,
+						(float) p
+					)
+				);
+			}
 		}
 };
