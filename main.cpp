@@ -325,12 +325,14 @@ int main() {
 				}
 
 				if (code == SDL_SCANCODE_RETURN) {
-					glm::vec2 asdf = glm::vec2(
-						curs[0] * 2,
-						((float) (-4 * 2)) + ((turn * 8) * 2) + (curs[1] * 2)
+					coll[p + (turn * 16)].mv(
+						cam,
+						glm::vec3(
+							curs[0],
+							0,
+							curs[1]
+						)
 					);
-
-					/* coll[p + (turn * 16)].mv(cam, asdf); */
 
 					turn = !turn;
 					p = 0;

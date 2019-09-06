@@ -77,6 +77,12 @@ class Piece {
 
 			prog->unUse();
 		}
+
+		void mv(Cam& cam, glm::vec3 loc) {
+			this->loc[0] = (float) ((-8 + (loc[0] * 2)) + 1);
+			this->loc[2] = (float) ((-8 + (loc[2] * 2)) + 1);
+			this->trans->setPos(this->loc);
+		}
 };
 
 class Pawn : public Piece {
