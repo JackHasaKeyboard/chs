@@ -101,7 +101,7 @@ int main() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
 	glEnableVertexAttribArray(0);
 
-	glm::vec2 curs = glm::vec2(1, 0);
+	glm::vec2 curs = glm::vec2(0, 0);
 	Trans trans;
 	glm::mat4 mvp = trans.getMvp(cam);
 	bool t = false;
@@ -371,6 +371,7 @@ int main() {
 
 			// legal
 			std::vector<glm::vec2> legal = coll[p + (turn * 16)].legal;
+
 			for (
 				int i = 0;
 				i < legal.size();
