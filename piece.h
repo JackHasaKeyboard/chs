@@ -30,7 +30,11 @@ class Piece {
 
 			this->loc = loc;
 			this->trans = new Trans;
-			trans->setPos(loc);
+			glm::vec3 dist;
+			dist[0] = (float) (((-4 * 2) + (loc[0] * 2)) + 1);
+			dist[1] = (float) loc[1];
+			dist[2] = (float) (((-4 * 2) + (loc[2] * 2)) + 1);
+			trans->setPos(dist);
 
 			this->t = t;
 			this->active = false;
@@ -82,10 +86,12 @@ class Pawn : public Piece {
 			pos,
 			t
 		) {
+			signed int side = t ? 1 : -1;
+
 			this->legal.push_back(
 				glm::vec2(
-					0.0,
-					(-4.0) + this->loc.z
+					-4 + this->loc.x,
+					-4 + this->loc.z - side
 				)
 			);
 		}
@@ -99,27 +105,27 @@ class Rook : public Piece {
 			t
 		) {
 			for (
-				int x = -4;
-				x < 4;
+				int x = -8;
+				x < 8;
 				x++
 			) {
 				this->legal.push_back(
 					glm::vec2(
-						(float) (this->loc.x + x),
-						0.0
+						-4 + this->loc.x + x,
+						-4 + this->loc.z
 					)
 				);
 			}
 
 			for (
-				int z = -4;
-				z < 4;
+				int z = -8;
+				z < 8;
 				z++
 			) {
 				this->legal.push_back(
 					glm::vec2(
-						0.0,
-						(float) (this->loc.z + z)
+						-4 + this->loc.x,
+						-4 + this->loc.z + z
 					)
 				);
 			}
@@ -150,8 +156,8 @@ class Knight : public Piece {
 					) {
 						this->legal.push_back(
 							glm::vec2(
-								(float) (loc.x + ((-1 * x) * 3) + (-1 * i)),
-								(float) (loc.z + ((-1 * z) * 3) + (1 * i))
+								loc.x + ((-1 * x) * 3) + (-1 * i),
+								loc.z + ((-1 * z) * 3) + (1 * i)
 							)
 						);
 					}
@@ -168,27 +174,27 @@ class Bishop : public Piece {
 			t
 		) {
 			for (
-				int p = -4;
-				p < 4;
+				int p = -8;
+				p < 8;
 				p++
 			) {
 				this->legal.push_back(
 					glm::vec2(
-						(float) (loc.x + p),
-						(float) (loc.z + p)
+						-4 + loc.x + p,
+						-4 + loc.z + p
 					)
 				);
 			}
 
 			for (
-				int p = -4;
-				p < 4;
+				int p = -8;
+				p < 8;
 				p++
 			) {
 				this->legal.push_back(
 					glm::vec2(
-						(float) (loc.x + -p),
-						(float) (loc.z + p)
+						-4 + loc.x + -p,
+						-4 + loc.z + p
 					)
 				);
 			}
@@ -207,18 +213,59 @@ class King : public Piece {
 				x < 2;
 				x++
 			) {
-				for (
-					int z = 0;
-					z < 2;
-					z++
-				) {
-					this->legal.push_back(
-						glm::vec2(
-							(float) this->loc.x + ((-1 * x) * 1),
-							(float) this->loc.z + ((-1 * z) * 1)
-						)
-					);
-				}
+				signed int side = x ? 1 : -1;
+
+				this->legal.push_back(
+					glm::vec2(
+						-4 + this->loc.x + side,
+						-4 + this->loc.z
+					)
+				);
+			}
+
+			for (
+				int x = 0;
+				x < 2;
+				x++
+			) {
+				signed int side = x ? 1 : -1;
+
+				this->legal.push_back(
+					glm::vec2(
+						-4 + this->loc.x,
+						-4 + this->loc.z + side
+					)
+				);
+			}
+
+			for (
+				int x = 0;
+				x < 2;
+				x++
+			) {
+				signed int side = x ? 1 : -1;
+
+				this->legal.push_back(
+					glm::vec2(
+						-4 + this->loc.x + side,
+						-4 + this->loc.z + side
+					)
+				);
+			}
+
+			for (
+				int x = 0;
+				x < 2;
+				x++
+			) {
+				signed int side = x ? 1 : -1;
+
+				this->legal.push_back(
+					glm::vec2(
+						-4 + this->loc.x + side,
+						-4 + this->loc.z - side
+					)
+				);
 			}
 		}
 };
@@ -231,53 +278,53 @@ class Queen : public Piece {
 			t
 		) {
 			for (
-				int x = -4;
-				x < 4;
+				int x = -8;
+				x < 8;
 				x++
 			) {
 				this->legal.push_back(
 					glm::vec2(
-						(float) x,
-						0.0
+						-4 + this->loc.x + x,
+						this->loc.z + -4
 					)
 				);
 			}
 
 			for (
-				int z = -4;
-				z < 4;
+				int z = -8;
+				z < 8;
 				z++
 			) {
 				this->legal.push_back(
 					glm::vec2(
-						0.0,
-						(float) z
+						-4 + this->loc.x + 0,
+						this->loc.z + -4 + z
 					)
 				);
 			}
 
 			for (
-				int p = -4;
-				p < 4;
-				p++
+				int d0 = -8;
+				d0 < 8;
+				d0++
 			) {
 				this->legal.push_back(
 					glm::vec2(
-						(float) p,
-						(float) p
+						-4 + this->loc.x + d0,
+						this->loc.z + -4 + d0
 					)
 				);
 			}
 
 			for (
-				int p = -4;
-				p < 4;
-				p++
+				int d1 = -8;
+				d1 < 8;
+				d1++
 			) {
 				this->legal.push_back(
 					glm::vec2(
-						(float) -p,
-						(float) p
+						-4 + this->loc.x + -d1,
+						this->loc.z + -4 + d1
 					)
 				);
 			}

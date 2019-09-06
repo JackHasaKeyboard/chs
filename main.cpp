@@ -119,13 +119,15 @@ int main() {
 			x < 8;
 			x++
 		) {
+			signed int dir = team ? 1 : -1;
+
 			coll.push_back(Pawn(
 				glm::vec3(
-					(-4 * 2.0) + (x * 2.0),
-					0.0,
-					8.0 + ((-1.0 * team) * 16.0)
+					x,
+					0,
+					(7 * team) - dir
 				),
-				team
+				(7 * team)
 			));
 		}
 
@@ -134,13 +136,13 @@ int main() {
 			x < 2;
 			x++
 		) {
-			bool side = x % 2;
+			signed int side = x ? 1 : -1;
 
 			coll.push_back(Rook(
 				glm::vec3(
-					8.0 + ((-1.0 * side) * (8.0 * 2.0)),
+					(x * 7) + (0 * side),
 					0,
-					8.0 + ((-1.0 * team) * 16.0) + 2.0
+					(7 * team)
 				),
 				t
 			));
@@ -151,13 +153,13 @@ int main() {
 			x < 2;
 			x++
 		) {
-			bool side = x % 2;
+			signed int side = x ? 1 : -1;
 
 			coll.push_back(Knight(
 				glm::vec3(
-					-6.0 + ((-1.0 * side) * (-6.0 * 2.0)),
+					(x * 7) - (1 * side),
 					0,
-					8.0 + ((-1.0 * team) * 16.0) + 2.0
+					(7 * team)
 				),
 				t
 			));
@@ -168,35 +170,49 @@ int main() {
 			x < 2;
 			x++
 		) {
-			bool side = x % 2;
+			signed int side = x ? 1 : -1;
 
 			coll.push_back(Bishop(
 				glm::vec3(
-					-4.0 + ((-1.0 * side) * (-4.0 * 2.0)),
+					(x * 7) - (2 * side),
 					0,
-					8.0 + ((-1.0 * team) * 16.0) + 2.0
+					(7 * team)
 				),
 				t
 			));
 		}
 
-		coll.push_back(King(
-			glm::vec3(
-				-2.0,
-				0,
-				8.0 + ((-1.0 * team) * 16.0) + 2.0
-			),
-			t
-		));
+		unsigned int x = 0;
+		signed int side;
+		{
+			side = x ? 1 : -1;
 
-		coll.push_back(Queen(
-			glm::vec3(
-				2.0,
-				0,
-				8.0 + ((-1.0 * team) * 16.0) + 2.0
-			),
-			t
-		));
+			coll.push_back(King(
+				glm::vec3(
+					3 + ((-1 * side) * team),
+					0,
+					(7 * team)
+				),
+				t
+			));
+
+			x++;
+		}
+
+		{
+			side = x ? 1 : -1;
+
+			coll.push_back(Queen(
+				glm::vec3(
+					4 + ((-1 * side) * team),
+					0,
+					(7 * team)
+				),
+				t
+			));
+		}
+
+		x++;
 	}
 
 	int p = 0;

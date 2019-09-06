@@ -41,8 +41,8 @@ void main() {
 			coord.x < (legal[i][0] * 2) + 2 &&
 			coord.y < (legal[i][1] * 2) + 2
 		) {
-			/* col = vec4(mix(grey[int(b)], purple[t], 0.5), 1.0); */
-			col = vec4(1.0, 0.0, 0.0, 1.0);
+			col = vec4(mix(grey[int(b)], purple[t], 0.5), 1.0);
+			/* col = vec4(1.0, 0.0, 0.0, 1.0); */
 		}
 	}
 }
