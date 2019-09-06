@@ -22,14 +22,6 @@ void main() {
 
 	col = (vec4(grey[int(b)], 1.0));
 
-	if ((coord.x < -8) ||(coord.y < -8) ||(coord.x > 8) ||(coord.y > 8)) {
-		col = vec4(grey[0], 1.0);
-	}
-
-	if (coord.x > ((curs.x - 4) * 2) &&coord.x < (((curs.x - 4) * 2) + (1 * 2)) &&coord.y > (((curs.y - 4) * 2)) &&coord.y < (((curs.y - 4) * 2) + (1 * 2))) {
-		col = vec4(purple[t], 1.0);
-	}
-
 	for (
 		int i = 0;
 		i < 8 * 8;
@@ -44,5 +36,14 @@ void main() {
 			col = vec4(mix(grey[int(b)], purple[t], 0.5), 1.0);
 			/* col = vec4(1.0, 0.0, 0.0, 1.0); */
 		}
+	}
+
+	if ((coord.x < -8) ||(coord.y < -8) ||(coord.x > 8) ||(coord.y > 8)) {
+		col = vec4(grey[0], 1.0);
+	}
+
+	if (coord.x > (curs.x * 2) && coord.x < ((curs.x * 2) + (1 * 2)) && coord.y > ((curs.y * 2)) && coord.y < ((curs.y * 2) + (1 * 2))) {
+		/* col = vec4(purple[t], 1.0); */
+		col = vec4(1.0, 0.0, 0.0, 1.0);
 	}
 }

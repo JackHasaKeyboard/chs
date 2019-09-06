@@ -102,6 +102,7 @@ int main() {
 	glEnableVertexAttribArray(0);
 
 	glm::vec2 curs = glm::vec2(0, 0);
+	unsigned int c = 0;
 	Trans trans;
 	glm::mat4 mvp = trans.getMvp(cam);
 	bool t = false;
@@ -287,29 +288,30 @@ int main() {
 					}
 				}
 
-				if (code == SDL_SCANCODE_LEFT) {
-					if (curs[0] < 7) {
-						curs[0]++;
-					}
-				}
-
 				if (code == SDL_SCANCODE_DOWN) {
-					if (curs[1] > 0) {
-						curs[1]--;
+					if (c > 0) {
+						c--;
 					}
-				}
 
-				if (code == SDL_SCANCODE_RIGHT) {
-					if (curs[0] > 0) {
-						curs[0]--;
-					}
+					curs = coll[p + (turn * 16)].legal[0];
+
+					std::cout << "x: " << curs[0] << std::endl;
+					std::cout << "y: " << curs[1] << std::endl;
 				}
 
 				if (code == SDL_SCANCODE_UP) {
-					if (curs[1] < 7) {
-						curs[1]++;
+					if (c < coll[p + (turn * 16)].legal.size() - 1) {
+						c++;
 					}
+
+					curs[0] = coll[p + (turn * 16)].legal[0][0];
+					curs[1] = coll[p + (turn * 16)].legal[0][1];
+
+					std::cout << "x: " << curs[0] << std::endl;
+					std::cout << "y: " << curs[1] << std::endl;
 				}
+
+				std::cout << std::endl;
 
 				if (code == SDL_SCANCODE_TAB) {
 					if (p < 15) {
@@ -325,6 +327,8 @@ int main() {
 				}
 
 				if (code == SDL_SCANCODE_RETURN) {
+					c = 0;
+
 					coll[p + (turn * 16)].mv(
 						cam,
 						glm::vec3(
@@ -366,7 +370,7 @@ int main() {
 			glUniform2fv(
 				glGetUniformLocation(board.id, "curs"),
 				1,
-				glm::value_ptr(curs)
+				glm::value_ptr(coll[p + (turn * 16)].legal[c])
 			);
 
 			// legal
