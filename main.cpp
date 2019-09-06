@@ -11,7 +11,7 @@
 #include "trans.h"
 #include "piece.h"
 
-void renderText(Disp& disp, std::string msg) {
+void print(Disp& disp, std::string msg) {
 	TTF_Init();
 
   glMatrixMode(GL_MODELVIEW);
@@ -396,7 +396,7 @@ int main() {
 				piece.draw(cam);
 			}
 
-			renderText(
+			print(
 				disp,
 				buff
 			);
