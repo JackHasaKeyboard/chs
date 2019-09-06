@@ -288,8 +288,8 @@ int main() {
 				}
 
 				if (code == SDL_SCANCODE_LEFT) {
-					if (curs[0] > 0) {
-						curs[0]--;
+					if (curs[0] < 7) {
+						curs[0]++;
 					}
 				}
 
@@ -300,8 +300,8 @@ int main() {
 				}
 
 				if (code == SDL_SCANCODE_RIGHT) {
-					if (curs[0] < 7) {
-						curs[0]++;
+					if (curs[0] > 0) {
+						curs[0]--;
 					}
 				}
 
