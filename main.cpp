@@ -324,6 +324,8 @@ int main() {
 					} else {
 						p = 0;
 					}
+
+					c = 0;
 				}
 
 				if (code == SDL_SCANCODE_RETURN) {
