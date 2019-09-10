@@ -273,7 +273,7 @@ int main() {
 						c--;
 					}
 
-					curs = coll[p + (turn * 16)].legal[0];
+					curs = coll[p + (turn * 16)].legal[c];
 				}
 
 				if (code == SDL_SCANCODE_UP) {
@@ -281,7 +281,7 @@ int main() {
 						c++;
 					}
 
-					curs = coll[p + (turn * 16)].legal[0];
+					curs = coll[p + (turn * 16)].legal[c];
 				}
 
 				std::cout << std::endl;
