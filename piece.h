@@ -38,6 +38,13 @@ class Piece {
 
 			this->t = t;
 			this->active = false;
+
+			this->legal.push_back(
+				glm::vec2(
+					-4 + this->loc.x,
+					-4 + this->loc.z
+				)
+			);
 		}
 
 		void draw(const Cam& cam) {
