@@ -289,14 +289,14 @@ int main() {
 				if (code == SDL_SCANCODE_TAB) {
 					if (p < 15) {
 						p++;
-
-						for (Piece& piece : coll) {
-							piece.active = false;
-						}
-						coll[p + (turn * 16)].active = true;
 					} else {
 						p = 0;
 					}
+
+					for (Piece& piece : coll) {
+						piece.active = false;
+					}
+					coll[p + (turn * 16)].active = true;
 
 					c = 0;
 					curs = coll[p + (turn * 16)].legal[c];
