@@ -81,8 +81,6 @@ int main() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
 	glEnableVertexAttribArray(0);
 
-	glm::vec2 curs = glm::vec2(0, 0);
-	unsigned int c = 0;
 	Trans trans;
 	glm::mat4 mvp = trans.getMvp(cam);
 	bool t = false;
@@ -208,6 +206,10 @@ int main() {
 
 	bool run = true;
 	std::string buff;
+
+	unsigned int c = 0;
+	glm::vec2 curs = coll[p + (turn * 16)].legal[c];
+
 	while (run) {
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
@@ -284,8 +286,6 @@ int main() {
 					curs = coll[p + (turn * 16)].legal[c];
 				}
 
-				std::cout << std::endl;
-
 				if (code == SDL_SCANCODE_TAB) {
 					if (p < 15) {
 						p++;
@@ -299,6 +299,7 @@ int main() {
 					}
 
 					c = 0;
+					curs = coll[p + (turn * 16)].legal[c];
 				}
 
 				if (code == SDL_SCANCODE_RETURN) {
@@ -321,6 +322,8 @@ int main() {
 					}
 					coll[p + (turn * 16)].active = true;
 				}
+
+				curs = coll[p + (turn * 16)].legal[c];
 			}
 
 			disp.clear(0, 0, 0, 1);
