@@ -34,25 +34,11 @@ void print(Disp& disp, std::string msg) {
 
   TTF_Font* font = TTF_OpenFont("terminus.bdf", 12);
 
-  SDL_Surface* surf = TTF_RenderText_Blended(
-		font,
-		std::string("$ " + msg).c_str(),
-		{95, 82, 134}
-  );
+  SDL_Surface* surf = TTF_RenderText_Blended(font, std::string("$ " + msg).c_str(), {95, 82, 134});
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(
-		GL_TEXTURE_2D,
-		0,
-		GL_RGBA,
-		surf->w,
-		surf->h,
-		0,
-		GL_BGRA,
-		GL_UNSIGNED_BYTE,
-		surf->pixels
-  );
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surf->w, surf->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, surf->pixels);
 
 	glBegin(GL_QUADS);
 	glTexCoord2f(0, 1); glVertex2f(0, 0);
@@ -72,13 +58,7 @@ void print(Disp& disp, std::string msg) {
 
 int main() {
 	Disp disp("chs", 800, 600);
-	Cam cam(
-		glm::vec3(0, 20, 7.5),
-		70.0f,
-		800.0 / 600.0,
-		0.001f,
-		100000.0f
-	);
+	Cam cam(glm::vec3(0, 20, 7.5), 70.0f, 800.0 / 600.0, 0.001f, 100000.0f);
 
 	Prog board("checker");
 
@@ -282,7 +262,7 @@ int main() {
 				if (code == SDL_SCANCODE_F5) {
 					cam.orientation = !cam.orientation;
 
-					for (auto& piece : coll) {
+					for (Piece& piece : coll) {
 						piece.rot[0] = cam.orientation * 90;
 						piece.trans->setRot(piece.rot);
 					}
@@ -294,9 +274,6 @@ int main() {
 					}
 
 					curs = coll[p + (turn * 16)].legal[0];
-
-					std::cout << "x: " << curs[0] << std::endl;
-					std::cout << "y: " << curs[1] << std::endl;
 				}
 
 				if (code == SDL_SCANCODE_UP) {
@@ -304,11 +281,7 @@ int main() {
 						c++;
 					}
 
-					curs[0] = coll[p + (turn * 16)].legal[0][0];
-					curs[1] = coll[p + (turn * 16)].legal[0][1];
-
-					std::cout << "x: " << curs[0] << std::endl;
-					std::cout << "y: " << curs[1] << std::endl;
+					curs = coll[p + (turn * 16)].legal[0];
 				}
 
 				std::cout << std::endl;
@@ -317,7 +290,7 @@ int main() {
 					if (p < 15) {
 						p++;
 
-						for (auto& piece : coll) {
+						for (Piece& piece : coll) {
 							piece.active = false;
 						}
 						coll[p + (turn * 16)].active = true;
@@ -343,7 +316,7 @@ int main() {
 					turn = !turn;
 					p = 0;
 
-					for (auto& piece : coll) {
+					for (Piece& piece : coll) {
 						piece.active = false;
 					}
 					coll[p + (turn * 16)].active = true;
