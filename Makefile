@@ -177,32 +177,32 @@ mesh.cpp.s:
 	$(MAKE) -f CMakeFiles/chs.dir/build.make CMakeFiles/chs.dir/mesh.cpp.s
 .PHONY : mesh.cpp.s
 
-obj_loader.o: obj_loader.cpp.o
+obj.o: obj.cpp.o
 
-.PHONY : obj_loader.o
+.PHONY : obj.o
 
 # target to build an object file
-obj_loader.cpp.o:
-	$(MAKE) -f CMakeFiles/chs.dir/build.make CMakeFiles/chs.dir/obj_loader.cpp.o
-.PHONY : obj_loader.cpp.o
+obj.cpp.o:
+	$(MAKE) -f CMakeFiles/chs.dir/build.make CMakeFiles/chs.dir/obj.cpp.o
+.PHONY : obj.cpp.o
 
-obj_loader.i: obj_loader.cpp.i
+obj.i: obj.cpp.i
 
-.PHONY : obj_loader.i
+.PHONY : obj.i
 
 # target to preprocess a source file
-obj_loader.cpp.i:
-	$(MAKE) -f CMakeFiles/chs.dir/build.make CMakeFiles/chs.dir/obj_loader.cpp.i
-.PHONY : obj_loader.cpp.i
+obj.cpp.i:
+	$(MAKE) -f CMakeFiles/chs.dir/build.make CMakeFiles/chs.dir/obj.cpp.i
+.PHONY : obj.cpp.i
 
-obj_loader.s: obj_loader.cpp.s
+obj.s: obj.cpp.s
 
-.PHONY : obj_loader.s
+.PHONY : obj.s
 
 # target to generate assembly for a file
-obj_loader.cpp.s:
-	$(MAKE) -f CMakeFiles/chs.dir/build.make CMakeFiles/chs.dir/obj_loader.cpp.s
-.PHONY : obj_loader.cpp.s
+obj.cpp.s:
+	$(MAKE) -f CMakeFiles/chs.dir/build.make CMakeFiles/chs.dir/obj.cpp.s
+.PHONY : obj.cpp.s
 
 # Help Target
 help:
@@ -219,9 +219,9 @@ help:
 	@echo "... mesh.o"
 	@echo "... mesh.i"
 	@echo "... mesh.s"
-	@echo "... obj_loader.o"
-	@echo "... obj_loader.i"
-	@echo "... obj_loader.s"
+	@echo "... obj.o"
+	@echo "... obj.i"
+	@echo "... obj.s"
 .PHONY : help
 
 

@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "obj_loader.h"
+#include "obj.h"
 
 struct Vertex {
 	private:

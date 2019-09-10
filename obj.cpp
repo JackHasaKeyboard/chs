@@ -1,4 +1,4 @@
-#include "obj_loader.h"
+#include "obj.h"
 #include <fstream>
 #include <iostream>
 #include <algorithm>
