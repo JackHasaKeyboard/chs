@@ -24,7 +24,12 @@ class Piece {
 
 		std::vector<glm::vec2> legal;
 
-		Piece(std::string mesh, glm::vec3 loc, bool t) {
+		Piece(
+			std::string mesh,
+			glm::vec3 loc,
+			bool t,
+			std::vector<glm::vec2> legal
+		) {
 			this->mesh = new Mesh(mesh);
 			this->prog = new Prog("purple");
 
@@ -39,6 +44,7 @@ class Piece {
 			this->t = t;
 			this->active = false;
 
+			this->legal = legal;
 			this->legal.push_back(
 				glm::vec2(
 					-4 + this->loc.x,
@@ -94,252 +100,90 @@ class Piece {
 
 class Pawn : public Piece {
 	public:
-		Pawn(glm::vec3 pos, bool t) : Piece(
+		Pawn(
+			glm::vec3 pos,
+			bool t,
+			std::vector<glm::vec2> legal
+		) : Piece(
 			"pawn",
 			pos,
-			t
+			t,
+			legal
 		) {
-			signed int side = t ? 1 : -1;
-
-			this->legal.push_back(
-				glm::vec2(
-					-4 + this->loc.x,
-					-4 + this->loc.z - side
-				)
-			);
 		}
 };
 
 class Rook : public Piece {
 	public:
-		Rook(glm::vec3 pos, bool t) : Piece(
+		Rook(
+			glm::vec3 pos,
+			bool t,
+			std::vector<glm::vec2> legal
+		) : Piece(
 			"rook",
 			pos,
-			t
+			t,
+			legal
 		) {
-			for (
-				int x = -8;
-				x < 8;
-				x++
-			) {
-				this->legal.push_back(
-					glm::vec2(
-						-4 + this->loc.x + x,
-						-4 + this->loc.z
-					)
-				);
-			}
-
-			for (
-				int z = -8;
-				z < 8;
-				z++
-			) {
-				this->legal.push_back(
-					glm::vec2(
-						-4 + this->loc.x,
-						-4 + this->loc.z + z
-					)
-				);
-			}
 		}
 };
 
 class Knight : public Piece {
 	public:
-		Knight(glm::vec3 pos, bool t) : Piece(
+		Knight(
+			glm::vec3 pos,
+			bool t,
+			std::vector<glm::vec2> legal
+		) : Piece(
 			"knight",
 			pos,
-			t
+			t,
+			legal
 		) {
-			for (
-				int i = 0;
-				i < 2;
-				i++
-			) {
-				for (
-					int x = 0;
-					x < 2;
-					x++
-				) {
-					for (
-						int z = 0;
-						z < 2;
-						z++
-					) {
-						this->legal.push_back(
-							glm::vec2(
-								loc.x + ((-1 * x) * 3) + (-1 * i),
-								loc.z + ((-1 * z) * 3) + (1 * i)
-							)
-						);
-					}
-				}
-			}
 		}
 };
 
 class Bishop : public Piece {
 	public:
-		Bishop(glm::vec3 pos, bool t) : Piece(
+		Bishop(
+			glm::vec3 pos,
+			bool t,
+			std::vector<glm::vec2> legal
+		) : Piece(
 			"bishop",
 			pos,
-			t
+			t,
+			legal
 		) {
-			for (
-				int p = -8;
-				p < 8;
-				p++
-			) {
-				this->legal.push_back(
-					glm::vec2(
-						-4 + loc.x + p,
-						-4 + loc.z + p
-					)
-				);
-			}
-
-			for (
-				int p = -8;
-				p < 8;
-				p++
-			) {
-				this->legal.push_back(
-					glm::vec2(
-						-4 + loc.x + -p,
-						-4 + loc.z + p
-					)
-				);
-			}
 		}
 };
 
 class King : public Piece {
 	public:
-		King(glm::vec3 pos, bool t) : Piece(
+		King(
+			glm::vec3 pos,
+			bool t,
+			std::vector<glm::vec2> legal
+		) : Piece(
 			"king",
 			pos,
-			t
+			t,
+			legal
 		) {
-			for (
-				int x = 0;
-				x < 2;
-				x++
-			) {
-				signed int side = x ? 1 : -1;
-
-				this->legal.push_back(
-					glm::vec2(
-						-4 + this->loc.x + side,
-						-4 + this->loc.z
-					)
-				);
-			}
-
-			for (
-				int x = 0;
-				x < 2;
-				x++
-			) {
-				signed int side = x ? 1 : -1;
-
-				this->legal.push_back(
-					glm::vec2(
-						-4 + this->loc.x,
-						-4 + this->loc.z + side
-					)
-				);
-			}
-
-			for (
-				int x = 0;
-				x < 2;
-				x++
-			) {
-				signed int side = x ? 1 : -1;
-
-				this->legal.push_back(
-					glm::vec2(
-						-4 + this->loc.x + side,
-						-4 + this->loc.z + side
-					)
-				);
-			}
-
-			for (
-				int x = 0;
-				x < 2;
-				x++
-			) {
-				signed int side = x ? 1 : -1;
-
-				this->legal.push_back(
-					glm::vec2(
-						-4 + this->loc.x + side,
-						-4 + this->loc.z - side
-					)
-				);
-			}
 		}
 };
 
 class Queen : public Piece {
 	public:
-		Queen(glm::vec3 pos, bool t) : Piece(
+		Queen(
+			glm::vec3 pos,
+			bool t,
+			std::vector<glm::vec2> legal
+		) : Piece(
 			"queen",
 			pos,
-			t
+			t,
+			legal
 		) {
-			for (
-				int x = -8;
-				x < 8;
-				x++
-			) {
-				this->legal.push_back(
-					glm::vec2(
-						-4 + this->loc.x + x,
-						this->loc.z + -4
-					)
-				);
-			}
-
-			for (
-				int z = -8;
-				z < 8;
-				z++
-			) {
-				this->legal.push_back(
-					glm::vec2(
-						-4 + this->loc.x + 0,
-						this->loc.z + -4 + z
-					)
-				);
-			}
-
-			for (
-				int d0 = -8;
-				d0 < 8;
-				d0++
-			) {
-				this->legal.push_back(
-					glm::vec2(
-						-4 + this->loc.x + d0,
-						this->loc.z + -4 + d0
-					)
-				);
-			}
-
-			for (
-				int d1 = -8;
-				d1 < 8;
-				d1++
-			) {
-				this->legal.push_back(
-					glm::vec2(
-						-4 + this->loc.x + -d1,
-						this->loc.z + -4 + d1
-					)
-				);
-			}
 		}
 };

@@ -88,6 +88,8 @@ int main() {
 	bool turn = false;
 	std::vector<Piece> coll;
 
+	std::vector<glm::vec2> legal;
+
 	for (
 		unsigned int team = 0;
 		team < 2;
@@ -100,14 +102,26 @@ int main() {
 		) {
 			signed int dir = team ? 1 : -1;
 
-			coll.push_back(Pawn(
+			Pawn pawn(
 				glm::vec3(
 					x,
 					0,
 					(7 * team) - dir
 				),
-				(7 * team)
-			));
+				(7 * team),
+				legal
+			);
+
+			legal.clear();
+			legal.push_back(
+				glm::vec2(
+					-4 + pawn.loc.x,
+					-4 + pawn.loc.z - dir
+				)
+			);
+			pawn.legal = legal;
+
+			coll.push_back(pawn);
 		}
 
 		for (
@@ -117,14 +131,45 @@ int main() {
 		) {
 			signed int side = x ? 1 : -1;
 
-			coll.push_back(Rook(
+			Rook rook(
 				glm::vec3(
-					(x * 7) + (0 * side),
+					(x * 7),
 					0,
 					(7 * team)
 				),
-				t
-			));
+				t,
+				legal
+			);
+
+			legal.clear();
+			for (
+				int x = -8;
+				x < 8;
+				x++
+			) {
+				legal.push_back(
+					glm::vec2(
+						-4 + x,
+						-4 + rook.loc.z
+					)
+				);
+			}
+			for (
+				int z = -8;
+				z < 8;
+				z++
+			) {
+				legal.push_back(
+					glm::vec2(
+						-4 + rook.loc.x,
+						-4 + z
+					)
+				);
+			}
+
+			rook.legal = legal;
+
+			coll.push_back(rook);
 		}
 
 		for (
@@ -134,14 +179,44 @@ int main() {
 		) {
 			signed int side = x ? 1 : -1;
 
-			coll.push_back(Knight(
+			Knight knight(
 				glm::vec3(
 					(x * 7) - (1 * side),
-					0,
-					(7 * team)
+					0, (7 * team)
 				),
-				t
-			));
+				t,
+				legal
+			);
+
+			legal.clear();
+			for (
+				int i = 0;
+				i < 2;
+				i++
+			) {
+				for (
+					int x = 0;
+					x < 2;
+					x++
+				) {
+					for (
+						int z = 0;
+						z < 2;
+						z++
+					) {
+						legal.push_back(
+							glm::vec2(
+								knight.loc.x + ((-1 * x) * 3) + (-1 * i),
+								knight.loc.z + ((-1 * z) * 3) + (1 * i)
+							)
+						);
+					}
+				}
+			}
+
+			knight.legal = legal;
+
+			coll.push_back(knight);
 		}
 
 		for (
@@ -151,14 +226,45 @@ int main() {
 		) {
 			signed int side = x ? 1 : -1;
 
-			coll.push_back(Bishop(
+			Bishop bishop(
 				glm::vec3(
 					(x * 7) - (2 * side),
 					0,
 					(7 * team)
 				),
-				t
-			));
+				t,
+				legal
+			);
+
+			for (
+				int p = -8;
+				p < 8;
+				p++
+			) {
+				legal.push_back(
+					glm::vec2(
+						-4 + bishop.loc.x + p,
+						-4 + bishop.loc.z + p
+					)
+				);
+			}
+
+			for (
+				int p = -8;
+				p < 8;
+				p++
+			) {
+				legal.push_back(
+					glm::vec2(
+						-4 + bishop.loc.x + -p,
+						-4 + bishop.loc.z + p
+					)
+				);
+			}
+
+			bishop.legal = legal;
+
+			coll.push_back(bishop);
 		}
 
 		unsigned int x = 0;
@@ -166,14 +272,77 @@ int main() {
 		{
 			side = x ? 1 : -1;
 
-			coll.push_back(King(
+			King king(
 				glm::vec3(
 					3 + ((-1 * side) * team),
 					0,
 					(7 * team)
 				),
-				t
-			));
+				t,
+				legal
+			);
+
+			legal.clear();
+			for (
+				int x = 0;
+				x < 2;
+				x++
+			) {
+				signed int side = x ? 1 : -1;
+
+				legal.push_back(
+					glm::vec2(
+						-4 + king.loc.x + side,
+						-4 + king.loc.z
+					)
+				);
+			}
+			for (
+				int x = 0;
+				x < 2;
+				x++
+			) {
+				signed int side = x ? 1 : -1;
+
+				legal.push_back(
+					glm::vec2(
+						-4 + king.loc.x,
+						-4 + king.loc.z + side
+					)
+				);
+			}
+			for (
+				int x = 0;
+				x < 2;
+				x++
+			) {
+				signed int side = x ? 1 : -1;
+
+				legal.push_back(
+					glm::vec2(
+						-4 + king.loc.x + side,
+						-4 + king.loc.z + side
+					)
+				);
+			}
+			for (
+				int x = 0;
+				x < 2;
+				x++
+			) {
+				signed int side = x ? 1 : -1;
+
+				legal.push_back(
+					glm::vec2(
+						-4 + king.loc.x + side,
+						-4 + king.loc.z - side
+					)
+				);
+			}
+
+			king.legal = legal;
+
+			coll.push_back(king);
 
 			x++;
 		}
@@ -181,17 +350,72 @@ int main() {
 		{
 			side = x ? 1 : -1;
 
-			coll.push_back(Queen(
+			Queen queen(
 				glm::vec3(
 					4 + ((-1 * side) * team),
 					0,
 					(7 * team)
 				),
-				t
-			));
-		}
+				t,
+				legal
+			);
 
-		x++;
+			legal.clear();
+			for (
+				int x = -8;
+				x < 8;
+				x++
+			) {
+				legal.push_back(
+					glm::vec2(
+						-4 + queen.loc.x + x,
+						queen.loc.z + -4
+					)
+				);
+			}
+			for (
+				int z = -8;
+				z < 8;
+				z++
+			) {
+				legal.push_back(
+					glm::vec2(
+						-4 + queen.loc.x + 0,
+						queen.loc.z + -4 + z
+					)
+				);
+			}
+			for (
+				int d0 = -8;
+				d0 < 8;
+				d0++
+			) {
+				legal.push_back(
+					glm::vec2(
+						-4 + queen.loc.x + d0,
+						queen.loc.z + -4 + d0
+					)
+				);
+			}
+			for (
+				int d1 = -8;
+				d1 < 8;
+				d1++
+			) {
+				legal.push_back(
+					glm::vec2(
+						-4 + queen.loc.x + -d1,
+						queen.loc.z + -4 + d1
+					)
+				);
+			}
+
+			queen.legal = legal;
+
+			coll.push_back(queen);
+
+			x++;
+		}
 	}
 
 	int p = 0;
