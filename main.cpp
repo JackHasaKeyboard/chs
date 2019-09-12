@@ -631,10 +631,7 @@ int main() {
 				piece.draw(cam);
 			}
 
-			print(
-				disp,
-				buff
-			);
+			print(disp, buff);
 
 			disp.update();
 		}
