@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 #include <SDL2/SDL_ttf.h>
 
@@ -87,6 +88,7 @@ int main() {
 
 	bool turn = false;
 	std::vector<Piece> coll;
+	std::vector<Piece> graveYard;
 
 	std::vector<glm::vec2> legal;
 
@@ -527,7 +529,33 @@ int main() {
 				}
 
 				if (code == SDL_SCANCODE_RETURN) {
-					c = 0;
+					graveYard.push_back(coll[p + (turn * 16)]);
+					int inc = 0;
+					for (Piece& piece : graveYard) {
+						piece.mv(
+							cam,
+							glm::vec3(
+								(float) (-4 + inc),
+								0,
+								(float) (-4 + -2)
+							)
+						);
+
+						inc++;
+					}
+
+					coll.erase(
+						std::remove_if(
+							coll.begin(),
+							coll.end(),
+							[&] (Piece piece) {
+								return
+									piece.loc.x == 4 + curs[0] &&
+									piece.loc.z == 4 + curs[1];
+							}
+						),
+						coll.end()
+					);
 
 					coll[p + (turn * 16)].mv(
 						cam,
@@ -538,6 +566,7 @@ int main() {
 						)
 					);
 
+					c = 0;
 					turn = !turn;
 					p = 0;
 
@@ -595,6 +624,10 @@ int main() {
 			board.unUse();
 
 			for (Piece& piece : coll) {
+				piece.draw(cam);
+			}
+
+			for (Piece& piece : graveYard) {
 				piece.draw(cam);
 			}
 
