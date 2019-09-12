@@ -12,6 +12,8 @@ struct Trans {
 			rot,
 			scale;
 
+		float angle;
+
 		Trans(
 			const glm::vec3& pos = glm::vec3(),
 			const glm::vec3& rot = glm::vec3(),
@@ -24,6 +26,8 @@ struct Trans {
 			this->pos = pos;
 			this->rot = rot;
 			this->scale = scale;
+
+			this->angle = 0.0f;
 		}
 
 		inline glm::mat4 getModel() const {
@@ -42,7 +46,13 @@ struct Trans {
 			glm::mat4 vp = cam.getViewProj();
 			glm::mat4 m = getModel();
 
-			return vp * m;
+			glm::mat4 orbit;
+			glm::mat4 rotXWorld = glm::rotate(0.0f, glm::vec3(1.0, 0.0, 0.0));
+			glm::mat4 rotYWorld = glm::rotate(glm::degrees(this->angle), glm::vec3(0.0, 1.0, 0.0));
+			glm::mat4 rotZWorld = glm::rotate(0.0f, glm::vec3(0.0, 0.0, 1.0));
+			orbit = rotXWorld * rotYWorld * rotZWorld;
+
+			return (vp * orbit) * m;
 		}
 
 		inline glm::vec3* getPos() {

@@ -424,11 +424,12 @@ int main() {
 	coll[p].active = true;
 
 	SDL_Event e;
-	bool down;
+	bool down = false;
 	int
 		start[2],
-		curr[2],
-		delta;
+		curr[2];
+
+	float delta;
 
 	bool run = true;
 	std::string buff;
@@ -452,13 +453,13 @@ int main() {
 				if (down) {
 					SDL_GetMouseState(&curr[0], &curr[1]);
 
-					delta = start[0] - curr[0];
+					delta = (float) ((float) start[0] - (float) curr[0]);
 
-					trans.rot[1] = (delta / 400.0);
+					trans.angle = delta / 10000.0f;
 					mvp = trans.getMvp(cam);
 
 					for (Piece& piece : coll) {
-						piece.trans->rot[1] = (delta / 400.0);
+						piece.trans->angle = delta / 10000.0f;
 						piece.mvp = trans.getMvp(cam);
 					}
 				}
