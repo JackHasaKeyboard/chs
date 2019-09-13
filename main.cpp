@@ -484,9 +484,9 @@ int main() {
 					}
 				}
 
-				if (k == SDLK_RETURN) {
-					buff.clear();
-				}
+				/* if (k == SDLK_RETURN) { */
+				/* 	buff.clear(); */
+				/* } */
 
 				if (code == SDL_SCANCODE_F5) {
 					cam.orientation = !cam.orientation;
@@ -530,7 +530,12 @@ int main() {
 				}
 
 				if (code == SDL_SCANCODE_RETURN) {
-					graveYard.push_back(coll[p + (turn * 16)]);
+					for (Piece piece : coll) {
+						if (4 + curs[0] == piece.loc.x &&4 + curs[1] == piece.loc.z) {
+							graveYard.push_back(piece);
+						}
+					}
+
 					int inc = 0;
 					for (Piece& piece : graveYard) {
 						piece.mv(
